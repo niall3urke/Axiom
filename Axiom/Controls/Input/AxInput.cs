@@ -214,17 +214,38 @@ namespace Axiom.Controls.Input
         private void SetTextboxProperties()
         {
             Tb.Enabled = !(_input.State == AxState.Disabled || _input.State == AxState.Loading);
+            
+            var backgroundColor = _input.BackgroundColor;
+            var foregroundColor = _input.ForegroundColor;
 
-            Tb.ForeColor = _input.ForegroundColor;
+            // If the textbox is disabled the colors will have alpha values 
+            // set to 50% (128). The textbox doesn't handle transparency so
+            // we need to convert from ARGB to RGB based on a % (0.97255%).
+            if (!Tb.Enabled)
+            {
+                backgroundColor = GetDisabledColorAsRgbInsteadOfArgb(backgroundColor);
+                foregroundColor = GetDisabledColorAsRgbInsteadOfArgb(foregroundColor);
+            }
 
-            Tb.BackColor = _input.BackgroundColor;
+            Tb.ForeColor = foregroundColor;
+
+            Tb.BackColor = backgroundColor;
 
             Tb.Location = _input.TextLocation;
-
+            
             Tb.Size = _input.TextSize;
 
             Tb.Font = _input.Font;
         }
+
+        private Color GetDisabledColorAsRgbInsteadOfArgb(Color c)
+        {
+            byte r = Convert.ToByte(c.R * 0.97255);
+            byte g = Convert.ToByte(c.G * 0.97255);
+            byte b = Convert.ToByte(c.B * 0.97255);
+            return System.Drawing.Color.FromArgb(r, g, b);
+        }
+
 
 
     }

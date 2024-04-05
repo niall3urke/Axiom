@@ -10,7 +10,7 @@ namespace Axiom.Controls
 {
     [ToolboxItem(true)]
     [DefaultEvent("CheckedChanged")]
-    class AxRadioButton : AxControlBase, IAxControl
+    public class AxRadioButton : AxControlBase, IAxControl
     {
 
         // =============

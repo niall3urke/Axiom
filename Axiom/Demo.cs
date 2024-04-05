@@ -14,7 +14,7 @@ namespace Axiom
 
         private void TogRound_CheckedChanged(object sender, EventArgs e)
         {
-            foreach (var control in Controls.OfType<IAxControl>())
+            foreach (var control in PnlControls.Controls.OfType<IAxControl>())
             {
                 control.IsRounded = !control.IsRounded;
             }
@@ -22,7 +22,7 @@ namespace Axiom
 
         private void TogOutline_CheckedChanged(object sender, EventArgs e)
         {
-            foreach (var control in Controls.OfType<IAxControl>())
+            foreach (var control in PnlControls.Controls.OfType<IAxControl>())
             {
                 control.IsOutlined = !control.IsOutlined;
             }
@@ -30,7 +30,7 @@ namespace Axiom
 
         private void TogLight_CheckedChanged(object sender, EventArgs e)
         {
-            foreach (var control in Controls.OfType<IAxControl>())
+            foreach (var control in PnlControls.Controls.OfType<IAxControl>())
             {
                 control.IsLight = !control.IsLight;
             }
@@ -38,7 +38,7 @@ namespace Axiom
 
         private void TogInvert_CheckedChanged(object sender, EventArgs e)
         {
-            foreach (var control in Controls.OfType<IAxControl>())
+            foreach (var control in PnlControls.Controls.OfType<IAxControl>())
             {
                 control.IsInverted = !control.IsInverted;
             }
@@ -46,15 +46,16 @@ namespace Axiom
 
         private void TogEnable_CheckedChanged(object sender, EventArgs e)
         {
-            foreach (Control control in Controls.OfType<IAxControl>())
+            foreach (Control control in PnlControls.Controls.OfType<IAxControl>())
             {
-                control.Enabled = !control.Enabled;
+                if (control != sender)
+                    control.Enabled = !control.Enabled;
             }
         }
 
         private void TogLoading_CheckedChanged(object sender, EventArgs e)
         {
-            foreach (var control in Controls.OfType<IAxControl>())
+            foreach (var control in PnlControls.Controls.OfType<IAxControl>())
             {
                 if (control.State == AxState.Loading)
                 {
@@ -69,7 +70,7 @@ namespace Axiom
 
         private void CmbShape_SelectedIndexChanged(object sender, EventArgs e)
         {
-            foreach (var button in Controls.OfType<IAxControl>())
+            foreach (var button in PnlControls.Controls.OfType<IAxControl>())
             {
                 button.Shape = (AxShape)CmbShape.SelectedIndex;
             }
@@ -77,7 +78,7 @@ namespace Axiom
 
         private void CmbColor_SelectedIndexChanged(object sender, EventArgs e)
         {
-            foreach (var control in Controls.OfType<IAxControl>())
+            foreach (var control in PnlControls.Controls.OfType<IAxControl>())
             {
                 control.Color = (AxColor)CmbColor.SelectedIndex;
             }
