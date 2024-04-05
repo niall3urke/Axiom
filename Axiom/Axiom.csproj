@@ -1,0 +1,135 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{D6006610-B419-40F6-80B4-D3A21EA27608}</ProjectGuid>
+    <OutputType>Library</OutputType>
+    <RootNamespace>Axiom</RootNamespace>
+    <AssemblyName>Axiom</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Design" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Controls\Button\AxButton.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\Button\ButtonColorHelper.cs" />
+    <Compile Include="Controls\Button\ButtonLogic.cs" />
+    <Compile Include="Controls\Button\GhostButton.cs" />
+    <Compile Include="Controls\Button\TextButton.cs" />
+    <Compile Include="Controls\Checkbox\AxCheckbox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\Checkbox\CheckboxColorHelper.cs" />
+    <Compile Include="Controls\Checkbox\CheckboxLogic.cs" />
+    <Compile Include="Controls\Input\AxInput.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Controls\Input\AxInput.Designer.cs">
+      <DependentUpon>AxInput.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Controls\Input\InputColorHelper.cs" />
+    <Compile Include="Controls\Input\InputLogic.cs" />
+    <Compile Include="Controls\RadioButton\AxRadioButton.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\RadioButton\RadioButtonLogic.cs" />
+    <Compile Include="Controls\Select\AxSelect.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\Select\AxSelectBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\Select\AxSelectButton.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\Select\AxSelectItem.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\Select\Designer\SelectActionList.cs" />
+    <Compile Include="Controls\Select\Designer\SelectDesigner.cs" />
+    <Compile Include="Controls\Select\SelectBoxLogic.cs" />
+    <Compile Include="Controls\Select\SelectButtonLogic.cs" />
+    <Compile Include="Controls\Select\SelectItemColorHelper.cs" />
+    <Compile Include="Controls\Select\SelectItemLogic.cs" />
+    <Compile Include="Controls\Switch\AxSwitch.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\Switch\SwitchColorHelper.cs" />
+    <Compile Include="Controls\Switch\SwitchLogic.cs" />
+    <Compile Include="Core\Bases\AxControlBase.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Core\Bases\AxUserControlBase.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Include="Core\Bases\AxUserControlBase.Designer.cs">
+      <DependentUpon>AxUserControlBase.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Core\ColorHelpers\ColorHelper.cs" />
+    <Compile Include="Core\ColorHelpers\Colors.cs" />
+    <Compile Include="Core\Drawables\BackgroundBorderDrawable.cs" />
+    <Compile Include="Core\Drawables\BackgroundDrawable.cs" />
+    <Compile Include="Core\Drawables\DrawableBase.cs" />
+    <Compile Include="Core\Drawables\FocusableBackgroundDrawable.cs" />
+    <Compile Include="Core\Drawables\LoadingSpinnerDrawable.cs" />
+    <Compile Include="Core\Drawables\RotatingArrowDrawable.cs" />
+    <Compile Include="Core\Drawables\ShadowDrawable.cs" />
+    <Compile Include="Core\Drawables\TickDrawable.cs" />
+    <Compile Include="Core\Enums.cs" />
+    <Compile Include="Core\Interfaces.cs" />
+    <Compile Include="Core\Logic\LogicBase.cs" />
+    <Compile Include="Core\Utils\Rotate.cs" />
+    <Compile Include="Demo.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Demo.Designer.cs">
+      <DependentUpon>Demo.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Service Include="{94E38DFF-614B-4cbd-B67C-F211BB35CE8B}" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Demo.resx">
+      <DependentUpon>Demo.cs</DependentUpon>
+    </EmbeddedResource>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>
