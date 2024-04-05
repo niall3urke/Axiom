@@ -221,7 +221,7 @@ namespace Axiom.Controls.Input
             // If the textbox is disabled the colors will have alpha values 
             // set to 50% (128). The textbox doesn't handle transparency so
             // we need to convert from ARGB to RGB based on a % (0.97255%).
-            if (!Tb.Enabled)
+            if (_input.State == AxState.Disabled)
             {
                 backgroundColor = GetDisabledColorAsRgbInsteadOfArgb(backgroundColor);
                 foregroundColor = GetDisabledColorAsRgbInsteadOfArgb(foregroundColor);
