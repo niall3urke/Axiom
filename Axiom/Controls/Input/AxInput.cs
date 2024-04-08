@@ -37,19 +37,22 @@ namespace Axiom.Controls.Input
             set => _input.IsRounded = value;
         }
 
-        [Category(Category), DisplayName("Text")]
-        public override string Text
+        [Category(Category), DisplayName("Placeholder")]
+        public string Placeholder
         {
-            get => Tb.Text;
-            set => Tb.Text = value;
+            get => _input.Placeholder;
+            set => _input.Placeholder = value;
         }
 
         // TODO
 
+        [Category(Category), DisplayName("Outlined")]
         public bool IsOutlined { get; set; }
 
+        [Category(Category), DisplayName("Inverted")]
         public bool IsInverted { get; set; }
 
+        [Category(Category), DisplayName("Light")]
         public bool IsLight { get; set; }
 
         // ================================
@@ -122,9 +125,15 @@ namespace Axiom.Controls.Input
 
             _input.PropertyChanged += (s, e) => Invalidate();
 
+            _input.SetTextboxTextToPlaceholder = () => Tb.Text = _input.Placeholder;
+
             Tb.LostFocus += Tb_LostFocus;
 
             Tb.GotFocus += Tb_GotFocus;
+
+            Tb.Enter += Tb_Enter;
+
+            Tb.Leave += Tb_Leave;
 
             _initialized = true;
         }
@@ -191,6 +200,22 @@ namespace Axiom.Controls.Input
             }
         }
 
+        private void Tb_Leave(object sender, EventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(Tb.Text))
+            {
+                Tb.Text = _input.Placeholder;
+            }
+        }
+
+        private void Tb_Enter(object sender, EventArgs e)
+        {
+            if (Tb.Text == _input.Placeholder)
+            {
+                Tb.Text = "";
+            }
+        }
+
         protected override void OnEnabledChanged(EventArgs e)
         {
             base.OnEnabledChanged(e);
@@ -211,20 +236,27 @@ namespace Axiom.Controls.Input
             base.OnPaint(e);
         }
 
+
         private void SetTextboxProperties()
         {
             Tb.Enabled = !(_input.State == AxState.Disabled || _input.State == AxState.Loading);
-            
+
             var backgroundColor = _input.BackgroundColor;
             var foregroundColor = _input.ForegroundColor;
 
             // If the textbox is disabled the colors will have alpha values 
             // set to 50% (128). The textbox doesn't handle transparency so
             // we need to convert from ARGB to RGB based on a % (0.97255%).
-            if (_input.State == AxState.Disabled)
+            bool isTransparent = backgroundColor.A != 255 || foregroundColor.A != 255;
+
+            if (_input.State == AxState.Disabled && isTransparent)
             {
                 backgroundColor = GetDisabledColorAsRgbInsteadOfArgb(backgroundColor);
                 foregroundColor = GetDisabledColorAsRgbInsteadOfArgb(foregroundColor);
+            }
+            else if (Tb.Text == _input.Placeholder)
+            {
+                foregroundColor = GetPlaceholderTextForegroundColor(foregroundColor);
             }
 
             Tb.ForeColor = foregroundColor;
@@ -244,6 +276,13 @@ namespace Axiom.Controls.Input
             byte g = Convert.ToByte(c.G * 0.97255);
             byte b = Convert.ToByte(c.B * 0.97255);
             return System.Drawing.Color.FromArgb(r, g, b);
+        }
+
+        private Color GetPlaceholderTextForegroundColor(Color c)
+        {
+            // Bulma values:HSLA( 46.05, 50.8, 61.05, 0.3)
+            // Equivalent: RGB(190, 191, 195)
+            return System.Drawing.Color.FromArgb(190, 191, 195);
         }
 
 

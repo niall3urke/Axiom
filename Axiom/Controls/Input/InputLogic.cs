@@ -13,6 +13,12 @@ namespace Axiom.Controls.Input
         // ===== Properties
         // =================
 
+        public string Placeholder
+        {
+            get => _placeholder;
+            set => SetField(ref _placeholder, value, SetTextboxTextToPlaceholder);
+        }
+
         public bool IsRounded
         {
             get => _isRounded;
@@ -47,9 +53,17 @@ namespace Axiom.Controls.Input
 
         public Size TextSize { get; private set; }
 
+        // ==============
+        // ===== Actions
+        // ==============
+
+        public Action SetTextboxTextToPlaceholder { get; set; }
+
         // ==================================
         // ===== Properties - backing fields
         // ==================================
+
+        private string _placeholder;
 
         private bool _isRounded;
 
@@ -69,6 +83,7 @@ namespace Axiom.Controls.Input
         {
             _background = new FocusableBackgroundDrawable();
             _spinner = new LoadingSpinnerDrawable(loadingElapsed);
+            _placeholder = "";
         }
 
         // ======================
