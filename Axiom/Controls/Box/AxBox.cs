@@ -2,7 +2,6 @@
 using Axiom.Core.Bases;
 using System;
 using System.ComponentModel;
-using System.Drawing;
 using System.Windows.Forms;
 
 namespace Axiom.Controls.Box
@@ -15,12 +14,18 @@ namespace Axiom.Controls.Box
         // ===== Properties: browsable 
         // ============================
 
-
         [Category(Category), DisplayName("Color")]
         public AxColor Color
         {
             get => _box.Color;
             set => _box.Color = value;
+        }
+
+        [Category(Category), DisplayName("Radius")]
+        public AxShape Shape
+        {
+            get => _box.Shape;
+            set => _box.Shape = value;
         }
 
         [Category(Category), DisplayName("Outlined")]
@@ -29,7 +34,7 @@ namespace Axiom.Controls.Box
             get => _box.IsOutlined;
             set => _box.IsOutlined = value;
         }
-
+        
         [Category(Category), DisplayName("Inverted")]
         public bool IsInverted
         {
@@ -54,9 +59,6 @@ namespace Axiom.Controls.Box
         // ================================
         // ===== Properties: non-browsable
         // ================================
-
-        [Browsable(false)]
-        public AxShape Shape { get; set; }
 
         [Browsable(false)]
         public AxState State

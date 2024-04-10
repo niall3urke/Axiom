@@ -2,13 +2,7 @@
 using Axiom.Core;
 using Axiom.Core.Drawables;
 using Axiom.Core.Logic;
-using System;
-using System.Collections.Generic;
 using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 
 namespace Axiom.Controls.Box
 {
@@ -137,6 +131,25 @@ namespace Axiom.Controls.Box
             _background.ForegroundColor = ForegroundColor;
 
             _background.BorderColor = BorderColor;
+
+
+            if (IsRounded)
+            {
+                _background.Radius = 6f;
+
+                if (Shape == AxShape.Small)
+                    _background.Radius *= 0.5f;
+
+                else if (Shape == AxShape.Medium)
+                    _background.Radius *= 2f;
+
+                else if (Shape == AxShape.Large)
+                    _background.Radius *= 3f;
+            }
+            else
+            {
+                _background.Radius = 0f;
+            }
         }
 
     }

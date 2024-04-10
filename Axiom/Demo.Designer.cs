@@ -30,6 +30,9 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Demo));
             this.PnlControls = new System.Windows.Forms.Panel();
+            this.axImage2 = new Axiom.Controls.Image.AxImage();
+            this.axBox1 = new Axiom.Controls.Box.AxBox();
+            this.axImage1 = new Axiom.Controls.Image.AxImage();
             this.axSelect1 = new Axiom.Controls.Select.AxSelect();
             this.axButton1 = new Axiom.Controls.AxButton();
             this.axRadioButton1 = new Axiom.Controls.AxRadioButton();
@@ -44,12 +47,15 @@
             this.TogLight = new Axiom.Controls.Switch.AxSwitch();
             this.TogOutline = new Axiom.Controls.Switch.AxSwitch();
             this.TogRound = new Axiom.Controls.Switch.AxSwitch();
-            this.axBox1 = new Axiom.Controls.Box.AxBox();
             this.PnlControls.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.axImage2)).BeginInit();
+            this.axBox1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.axImage1)).BeginInit();
             this.SuspendLayout();
             // 
             // PnlControls
             // 
+            this.PnlControls.Controls.Add(this.axImage2);
             this.PnlControls.Controls.Add(this.axBox1);
             this.PnlControls.Controls.Add(this.axSelect1);
             this.PnlControls.Controls.Add(this.axButton1);
@@ -59,8 +65,77 @@
             this.PnlControls.Controls.Add(this.axInput1);
             this.PnlControls.Location = new System.Drawing.Point(12, 147);
             this.PnlControls.Name = "PnlControls";
-            this.PnlControls.Size = new System.Drawing.Size(1013, 206);
+            this.PnlControls.Size = new System.Drawing.Size(1013, 498);
             this.PnlControls.TabIndex = 30;
+            // 
+            // axImage2
+            // 
+            this.axImage2.Aspect = Axiom.Controls.Image.AxImage.AspectRatio.Free;
+            this.axImage2.BorderColor = System.Drawing.SystemColors.Control;
+            this.axImage2.Color = Axiom.Core.AxColor.Default;
+            this.axImage2.CurveBtmLhs = true;
+            this.axImage2.CurveBtmRhs = true;
+            this.axImage2.CurveTopLhs = true;
+            this.axImage2.CurveTopRhs = true;
+            this.axImage2.Image = ((System.Drawing.Image)(resources.GetObject("axImage2.Image")));
+            this.axImage2.IsCircle = false;
+            this.axImage2.IsClickable = false;
+            this.axImage2.IsInverted = false;
+            this.axImage2.IsLight = false;
+            this.axImage2.IsOutlined = false;
+            this.axImage2.IsRounded = true;
+            this.axImage2.Location = new System.Drawing.Point(299, 80);
+            this.axImage2.Name = "axImage2";
+            this.axImage2.Shape = Axiom.Core.AxShape.Normal;
+            this.axImage2.Size = new System.Drawing.Size(219, 219);
+            this.axImage2.State = Axiom.Core.AxState.Normal;
+            this.axImage2.TabIndex = 87;
+            this.axImage2.TabStop = false;
+            // 
+            // axBox1
+            // 
+            this.axBox1.Color = Axiom.Core.AxColor.White;
+            this.axBox1.Controls.Add(this.axImage1);
+            this.axBox1.CurveBtmLhs = true;
+            this.axBox1.CurveBtmRhs = true;
+            this.axBox1.CurveTopLhs = true;
+            this.axBox1.CurveTopRhs = true;
+            this.axBox1.IsInverted = false;
+            this.axBox1.IsLight = false;
+            this.axBox1.IsOutlined = false;
+            this.axBox1.IsRounded = true;
+            this.axBox1.Location = new System.Drawing.Point(18, 80);
+            this.axBox1.Name = "axBox1";
+            this.axBox1.Shape = Axiom.Core.AxShape.Large;
+            this.axBox1.Size = new System.Drawing.Size(275, 327);
+            this.axBox1.State = Axiom.Core.AxState.Normal;
+            this.axBox1.TabIndex = 57;
+            // 
+            // axImage1
+            // 
+            this.axImage1.Aspect = Axiom.Controls.Image.AxImage.AspectRatio.Ratio16By9;
+            this.axImage1.BackColor = System.Drawing.Color.White;
+            this.axImage1.BorderColor = System.Drawing.Color.White;
+            this.axImage1.Color = Axiom.Core.AxColor.Default;
+            this.axImage1.CurveBtmLhs = false;
+            this.axImage1.CurveBtmRhs = false;
+            this.axImage1.CurveTopLhs = true;
+            this.axImage1.CurveTopRhs = true;
+            this.axImage1.Dock = System.Windows.Forms.DockStyle.Top;
+            this.axImage1.Image = ((System.Drawing.Image)(resources.GetObject("axImage1.Image")));
+            this.axImage1.IsCircle = false;
+            this.axImage1.IsClickable = true;
+            this.axImage1.IsInverted = false;
+            this.axImage1.IsLight = false;
+            this.axImage1.IsOutlined = false;
+            this.axImage1.IsRounded = true;
+            this.axImage1.Location = new System.Drawing.Point(0, 0);
+            this.axImage1.Name = "axImage1";
+            this.axImage1.Shape = Axiom.Core.AxShape.Large;
+            this.axImage1.Size = new System.Drawing.Size(275, 154);
+            this.axImage1.State = Axiom.Core.AxState.Normal;
+            this.axImage1.TabIndex = 80;
+            this.axImage1.TabStop = false;
             // 
             // axSelect1
             // 
@@ -317,29 +392,11 @@
             this.TogRound.Text = "Round";
             this.TogRound.CheckedChanged += new System.EventHandler(this.TogRound_CheckedChanged);
             // 
-            // axBox1
-            // 
-            this.axBox1.Color = Axiom.Core.AxColor.White;
-            this.axBox1.CurveBtmLhs = true;
-            this.axBox1.CurveBtmRhs = true;
-            this.axBox1.CurveTopLhs = true;
-            this.axBox1.CurveTopRhs = true;
-            this.axBox1.IsInverted = false;
-            this.axBox1.IsLight = false;
-            this.axBox1.IsOutlined = false;
-            this.axBox1.IsRounded = false;
-            this.axBox1.Location = new System.Drawing.Point(13, 84);
-            this.axBox1.Name = "axBox1";
-            this.axBox1.Shape = Axiom.Core.AxShape.Normal;
-            this.axBox1.Size = new System.Drawing.Size(200, 100);
-            this.axBox1.State = Axiom.Core.AxState.Normal;
-            this.axBox1.TabIndex = 57;
-            // 
             // Demo
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1038, 503);
+            this.ClientSize = new System.Drawing.Size(1038, 722);
             this.Controls.Add(this.PnlControls);
             this.Controls.Add(this.CmbColor);
             this.Controls.Add(this.CmbShape);
@@ -352,6 +409,9 @@
             this.Name = "Demo";
             this.Text = "Demo";
             this.PnlControls.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.axImage2)).EndInit();
+            this.axBox1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)(this.axImage1)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -374,5 +434,7 @@
         private System.Windows.Forms.Panel PnlControls;
         private Controls.Select.AxSelect axSelect1;
         private Controls.Box.AxBox axBox1;
+        private Controls.Image.AxImage axImage1;
+        private Controls.Image.AxImage axImage2;
     }
 }

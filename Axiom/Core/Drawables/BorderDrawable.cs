@@ -1,13 +1,19 @@
 ﻿using System;
-using System.Drawing.Drawing2D;
+using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
 namespace Axiom.Core.Drawables
 {
-    public class BackgroundDrawable : DrawableBase
+    public class BorderDrawable : DrawableBase
     {
 
         // Properties
+
+        public float BorderWidth { get; set; }
 
         public bool CurveTopLhs { get; set; }
 
@@ -21,28 +27,15 @@ namespace Axiom.Core.Drawables
 
         // Constructors
 
-        public BackgroundDrawable() : base()
+        public BorderDrawable() : base()
         {
+            BorderWidth = 2f;
             CurveTopLhs = true;
             CurveTopRhs = true;
             CurveBtmRhs = true;
             CurveBtmLhs = true;
             Radius = 6;
         }
-
-        // Events
-
-        public override void EnabledChanged(bool enabled) { }
-
-        public override bool MouseLeave(Point p) => !Path.IsVisible(p);
-
-        public override bool MouseEnter(Point p) => Path.IsVisible(p);
-
-        public override bool MouseDown(Point p) => Path.IsVisible(p);
-
-        public override bool MouseUp(Point p) => Path.IsVisible(p);
-
-        public override bool Click(Point p) => Path.IsVisible(p);
 
         // Methods: public
 
@@ -62,40 +55,17 @@ namespace Axiom.Core.Drawables
             }
         }
 
-        public GraphicsPath GetPath()
-        {
-            float x = Location.X;
-            float y = Location.Y;
-
-            if (IsCircle())
-            {
-                float d = Radius * 2 - 1;
-                return GetCircle(x, y, d);
-            }
-
-            float h = Height - 0.5f;
-            float w = Width - 0.5f;
-            float r = Radius;
-            return GetRoundedRectangle(x, y, w, h, r);
-        }
-
         // Methods: protected overridable
 
         protected virtual void DrawCircle(Graphics g)
         {
             float x = Location.X;
             float y = Location.Y;
-
-            // We used to reduce the diameter by 1px to account for the 1px removed
-            // from the control's width and height, but this should be account for
-            // by the control itself, not the drawable... TODO!
             float d = Radius * 2 - 1;
 
             using (Path = GetCircle(x, y, d))
-            using (var b = new SolidBrush(BackgroundColor))
-            using (var p = new Pen(BorderColor))
+            using (var p = new Pen(BorderColor, BorderWidth))
             {
-                g.FillPath(b, Path);
                 g.DrawPath(p, Path);
             }
         }
@@ -104,20 +74,13 @@ namespace Axiom.Core.Drawables
         {
             float x = Location.X;
             float y = Location.Y;
-
-            // We used to reduce the height by 1px to account for the 1px removed
-            // from the control's width and height, but this should be account for
-            // by the control itself, not the drawable. Hence, just use the height
-            // and width as is.
-            float h = Height - 1;
-            float w = Width - 1;
             float r = Radius;
+            float h = Height - 1f;
+            float w = Width - 1f;
 
             using (Path = GetRoundedRectangle(x, y, w, h, r))
-            using (var b = new SolidBrush(BackgroundColor))
-            using (var p = new Pen(BorderColor))
+            using (var p = new Pen(BorderColor, BorderWidth))
             {
-                g.FillPath(b, Path);
                 g.DrawPath(p, Path);
             }
         }
@@ -135,13 +98,6 @@ namespace Axiom.Core.Drawables
 
         protected GraphicsPath GetRoundedRectangle(float x0, float y0, float w, float h, float r)
         {
-            if (r == 0)
-            {
-                var gp = new GraphicsPath();
-                gp.AddRectangle(new RectangleF(x0, y0, w, h));
-                return gp;
-            }
-
             // Diameter
             float d = r * 2;
 
@@ -325,7 +281,6 @@ namespace Axiom.Core.Drawables
 
             return path;
         }
-
 
     }
 }

@@ -63,6 +63,10 @@
     </Compile>
     <Compile Include="Controls\Checkbox\CheckboxColorHelper.cs" />
     <Compile Include="Controls\Checkbox\CheckboxLogic.cs" />
+    <Compile Include="Controls\Image\AxImage.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\Image\ImageLogic.cs" />
     <Compile Include="Controls\Input\AxInput.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -104,6 +108,9 @@
     <Compile Include="Core\Bases\AxPanelBase.cs">
       <SubType>Component</SubType>
     </Compile>
+    <Compile Include="Core\Bases\AxPictureBoxBase.cs">
+      <SubType>Component</SubType>
+    </Compile>
     <Compile Include="Core\Bases\AxUserControlBase.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -114,6 +121,7 @@
     <Compile Include="Core\ColorHelpers\Colors.cs" />
     <Compile Include="Core\Drawables\BackgroundBorderDrawable.cs" />
     <Compile Include="Core\Drawables\BackgroundDrawable.cs" />
+    <Compile Include="Core\Drawables\BorderDrawable.cs" />
     <Compile Include="Core\Drawables\DrawableBase.cs" />
     <Compile Include="Core\Drawables\FocusableBackgroundDrawable.cs" />
     <Compile Include="Core\Drawables\LoadingSpinnerDrawable.cs" />
@@ -123,6 +131,7 @@
     <Compile Include="Core\Enums.cs" />
     <Compile Include="Core\Interfaces.cs" />
     <Compile Include="Core\Logic\LogicBase.cs" />
+    <Compile Include="Core\Utils\EnumDescriptionConverter.cs" />
     <Compile Include="Core\Utils\Rotate.cs" />
     <Compile Include="Demo.cs">
       <SubType>Form</SubType>
@@ -132,12 +141,22 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
     <Service Include="{94E38DFF-614B-4cbd-B67C-F211BB35CE8B}" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="Demo.resx">
       <DependentUpon>Demo.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
