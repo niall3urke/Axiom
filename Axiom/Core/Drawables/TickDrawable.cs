@@ -14,7 +14,7 @@ namespace Axiom.Core.Drawables
 
         public override void Draw(Graphics g)
         {
-            g.SmoothingMode = System.Drawing.Drawing2D.SmoothingMode.AntiAlias;
+            g.SmoothingMode = SmoothingMode.AntiAlias;
 
             using (var path = GetPath())
             using (var pen = new Pen(ForegroundColor, 2f))
@@ -22,7 +22,7 @@ namespace Axiom.Core.Drawables
                 g.DrawPath(pen, path);
             }
 
-            var r = new Rectangle(Location.X, Location.Y, Width, Height);
+            var r = new RectangleF(Location.X, Location.Y, Width, Height);
             using (var pen = new Pen(ForegroundColor, 1f))
             {
                 //g.DrawRectangle(pen, r);

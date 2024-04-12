@@ -17,7 +17,7 @@ namespace Axiom.Core
 
         Color FocusColor { get; set; }
 
-        Point Location { get; set; }
+        PointF Location { get; set; }
 
         int Height { get; set; }
 

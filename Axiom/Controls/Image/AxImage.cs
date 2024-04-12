@@ -25,39 +25,39 @@ namespace Axiom.Controls.Image
         [Category(Category), DisplayName("Border")]
         public Color BorderColor
         {
-            get => _image.BorderColor;
-            set => _image.BorderColor = value;
+            get => _logic.BorderColor;
+            set => _logic.BorderColor = value;
         }
 
         [Category(Category), DisplayName("Radius")]
         public AxShape Shape
         {
-            get => _image.Shape;
-            set => _image.Shape = value;
+            get => _logic.Shape;
+            set => _logic.Shape = value;
         }
 
         [Category(Category), DisplayName("Rounded")]
         public bool IsRounded
         {
-            get => _image.IsRounded;
-            set => _image.IsRounded = value;
+            get => _logic.IsRounded;
+            set => _logic.IsRounded = value;
         }
 
         [Category(Category), DisplayName("Clickable")]
         public bool IsClickable
         {
-            get => _image.IsClickable;
-            set => _image.IsClickable = value;
+            get => _logic.IsClickable;
+            set => _logic.IsClickable = value;
         }
 
         [Category(Category), DisplayName("Circle")]
         public bool IsCircle
         {
-            get => _image.IsCircle;
+            get => _logic.IsCircle;
             set
             {
-                _image.IsCircle = value;
-                if (_image.IsCircle)
+                _logic.IsCircle = value;
+                if (_logic.IsCircle)
                 {
                     int max = Math.Max(Height, Width);
                     Height = max;
@@ -69,29 +69,29 @@ namespace Axiom.Controls.Image
         [Category(CategoryAdvanced), DisplayName("Curve Top LHS")]
         public bool CurveTopLhs
         {
-            get => _image.CurveTopLhs;
-            set => _image.CurveTopLhs = value;
+            get => _logic.CurveTopLhs;
+            set => _logic.CurveTopLhs = value;
         }
 
         [Category(CategoryAdvanced), DisplayName("Curve Top RHS")]
         public bool CurveTopRhs
         {
-            get => _image.CurveTopRhs;
-            set => _image.CurveTopRhs = value;
+            get => _logic.CurveTopRhs;
+            set => _logic.CurveTopRhs = value;
         }
 
         [Category(CategoryAdvanced), DisplayName("Curve Bottom LHS")]
         public bool CurveBtmLhs
         {
-            get => _image.CurveBtmLhs;
-            set => _image.CurveBtmLhs = value;
+            get => _logic.CurveBtmLhs;
+            set => _logic.CurveBtmLhs = value;
         }
 
         [Category(CategoryAdvanced), DisplayName("Curve Bottom RHS")]
         public bool CurveBtmRhs
         {
-            get => _image.CurveBtmRhs;
-            set => _image.CurveBtmRhs = value;
+            get => _logic.CurveBtmRhs;
+            set => _logic.CurveBtmRhs = value;
         }
 
         // ================================
@@ -113,14 +113,14 @@ namespace Axiom.Controls.Image
         [Browsable(false)]
         public AxState State
         {
-            get => _image.State;
+            get => _logic.State;
             set
             {
                 if (!Enabled && value != AxState.Disabled)
                 {
                     Enabled = true;
                 }
-                _image.State = value;
+                _logic.State = value;
             }
         }
 
@@ -128,7 +128,7 @@ namespace Axiom.Controls.Image
         // ===== Fields 
         // =============
 
-        private readonly ImageLogic _image;
+        private readonly ImageLogic _logic;
 
         // ===================
         // ===== Constructors
@@ -136,13 +136,13 @@ namespace Axiom.Controls.Image
 
         public AxImage() : base()
         {
-            _image = new ImageLogic
+            _logic = new ImageLogic
             {
                 BorderColor = BackColor,
                 Height = Height,
                 Width = Width
             };
-            _image.PropertyChanged += (s, e) => Invalidate();
+            _logic.PropertyChanged += (s, e) => Invalidate();
         }
 
         // =============
@@ -164,7 +164,7 @@ namespace Axiom.Controls.Image
             if (_applyingAspectRatio)
                 return;
 
-            if (_image.IsCircle)
+            if (_logic.IsCircle)
             {
                 int max = Math.Max(Height, Width);
                 Height = max;
@@ -175,13 +175,13 @@ namespace Axiom.Controls.Image
                 ApplyAspectRatio();
             }
 
-            _image.Height = Height;
-            _image.Width = Width;
+            _logic.Height = Height;
+            _logic.Width = Width;
         }
 
         protected override void OnClick(EventArgs e)
         {
-            if (_image.State != AxState.Loading)
+            if (_logic.State != AxState.Loading)
             {
                 this.Focus();
                 base.OnClick(e);
@@ -190,46 +190,46 @@ namespace Axiom.Controls.Image
 
         protected override void OnMouseDown(MouseEventArgs e)
         {
-            if (!_image.IsClickable)
+            if (!_logic.IsClickable)
                 return;
 
-            if (_image.State != AxState.Loading)
+            if (_logic.State != AxState.Loading)
             {
-                _image.State = AxState.Active;
+                _logic.State = AxState.Active;
             }
         }
 
         protected override void OnMouseUp(MouseEventArgs e)
         {
-            if (!_image.IsClickable)
+            if (!_logic.IsClickable)
                 return;
 
-            if (_image.State != AxState.Loading)
+            if (_logic.State != AxState.Loading)
             {
-                _image.State = AxState.Hover;
+                _logic.State = AxState.Hover;
             }
         }
 
         protected override void OnMouseEnter(EventArgs e)
         {
-            if (!_image.IsClickable)
+            if (!_logic.IsClickable)
                 return;
 
-            if (ContainsCursor() && _image.State != AxState.Loading)
+            if (ContainsCursor() && _logic.State != AxState.Loading)
             {
-                _image.State = AxState.Hover;
+                _logic.State = AxState.Hover;
                 Cursor = Cursors.Hand;
             }
         }
 
         protected override void OnMouseLeave(EventArgs e)
         {
-            if (!_image.IsClickable)
+            if (!_logic.IsClickable)
                 return;
 
-            if (!ContainsCursor() && _image.State != AxState.Loading)
+            if (!ContainsCursor() && _logic.State != AxState.Loading)
             {
-                _image.State = AxState.Normal;
+                _logic.State = AxState.Normal;
                 Cursor = Cursors.Default;
             }
         }
@@ -237,22 +237,22 @@ namespace Axiom.Controls.Image
         protected override void OnEnabledChanged(EventArgs e)
         {
             base.OnEnabledChanged(e);
-            _image.State = Enabled ? AxState.Normal : AxState.Disabled;
+            _logic.State = Enabled ? AxState.Normal : AxState.Disabled;
         }
 
         protected override void OnPaint(PaintEventArgs e)
         {
             // Ensure this is always up to date
-            _image.BorderColor = BackColor;
+            _logic.BorderColor = BackColor;
 
             // Crop the paintable region depending on user settings
-            Region = _image.GetRegion();
+            Region = _logic.GetRegion();
 
             // Paint the picture
             base.OnPaint(e);
 
             // Paint the border to create smooth edges effect
-            _image.Draw(e.Graphics);
+            _logic.Draw(e.Graphics);
         }
 
         // ==============

@@ -64,8 +64,8 @@ namespace Axiom.Core.Drawables
 
         public GraphicsPath GetPath()
         {
-            float x = Location.X;
-            float y = Location.Y;
+            float x = Location.X - 0.5f;
+            float y = Location.Y - 0.5f;
 
             if (IsCircle())
             {
@@ -73,8 +73,8 @@ namespace Axiom.Core.Drawables
                 return GetCircle(x, y, d);
             }
 
-            float h = Height - 0.5f;
-            float w = Width - 0.5f;
+            float h = Height + 0.5f;
+            float w = Width  + 0.5f;
             float r = Radius;
             return GetRoundedRectangle(x, y, w, h, r);
         }
@@ -104,15 +104,12 @@ namespace Axiom.Core.Drawables
         {
             float x = Location.X;
             float y = Location.Y;
-
-            // We used to reduce the height by 1px to account for the 1px removed
-            // from the control's width and height, but this should be account for
-            // by the control itself, not the drawable. Hence, just use the height
-            // and width as is.
-            float h = Height - 1;
-            float w = Width - 1;
+            float h = Height;
+            float w = Width;
             float r = Radius;
 
+            // The border pen has a width of 1f, hence -1 from w and h.
+            //using (var borderPath = GetRoundedRectangle(x, y, w - 1, h - 1, r))
             using (Path = GetRoundedRectangle(x, y, w, h, r))
             using (var b = new SolidBrush(BackgroundColor))
             using (var p = new Pen(BorderColor))

@@ -72,11 +72,11 @@ namespace Axiom.Core.Drawables
 
         protected virtual void DrawRoundedRectangle(Graphics g)
         {
-            float x = Location.X;
-            float y = Location.Y;
+            float x = Location.X - 0.5f * BorderWidth;
+            float y = Location.Y - 0.5f * BorderWidth;
             float r = Radius;
-            float h = Height - 1f;
-            float w = Width - 1f;
+            float h = Height + 0.5f * BorderWidth;
+            float w = Width + 0.5f * BorderWidth;
 
             using (Path = GetRoundedRectangle(x, y, w, h, r))
             using (var p = new Pen(BorderColor, BorderWidth))

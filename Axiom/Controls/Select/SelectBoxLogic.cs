@@ -102,9 +102,13 @@ namespace Axiom.Controls.Select
 
             _background.FocusColor = FocusColor;
 
-            _background.Height = Height;
+            // To see the border on the RHS/bottom we need
+            // to reduce the height and width by 1px (i.e.
+            // the pen width of the border).
 
-            _background.Width = Width;
+            _background.Height = Height - 1;
+
+            _background.Width = Width - 1;
         }
 
         private void SetColors()

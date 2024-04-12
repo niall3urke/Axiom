@@ -14,7 +14,7 @@ namespace Axiom.Core.Drawables
 
         // Properties
 
-        public Point Location
+        public PointF Location
         {
             get => _location;
             set => SetField(ref _location, value);
@@ -36,7 +36,7 @@ namespace Axiom.Core.Drawables
 
         // Fields
 
-        private Point _location;
+        private PointF _location;
 
         // Constructors
 

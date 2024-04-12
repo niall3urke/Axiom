@@ -211,10 +211,10 @@ namespace Axiom.Controls
 
             _check.Radius = GetCheckRadius();
 
-            _check.Location = new Point
+            _check.Location = new PointF
             {
-                X = (_box.Width - _check.Width) / 2,
-                Y = (Height - _check.Height) / 2
+                X = (_box.Width - _check.Width) / 2 - (IsRounded ? 0f : 0.5f),
+                Y = (Height - _check.Height) / 2 - (IsRounded ? 0f : 0.5f)
             };
         }
 

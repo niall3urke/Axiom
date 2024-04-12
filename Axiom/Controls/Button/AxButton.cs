@@ -18,57 +18,57 @@ namespace Axiom.Controls
         [Category(Category), DisplayName("Color")]
         public AxColor Color
         {
-            get => _button.Color;
-            set => _button.Color = value;
+            get => _logic.Color;
+            set => _logic.Color = value;
         }
 
         [Category(Category), DisplayName("Shape")]
         public AxShape Shape
         {
-            get => _button.Shape;
-            set => _button.Shape = value;
+            get => _logic.Shape;
+            set => _logic.Shape = value;
         }
 
         [Category(Category), DisplayName("Outlined")]
         public bool IsOutlined
         {
-            get => _button.IsOutlined;
-            set => _button.IsOutlined = value;
+            get => _logic.IsOutlined;
+            set => _logic.IsOutlined = value;
         }
 
         [Category(Category), DisplayName("Inverted")]
         public bool IsInverted
         {
-            get => _button.IsInverted;
-            set => _button.IsInverted = value;
+            get => _logic.IsInverted;
+            set => _logic.IsInverted = value;
         }
 
         [Category(Category), DisplayName("Rounded")]
         public bool IsRounded
         {
-            get => _button.IsRounded;
-            set => _button.IsRounded = value;
+            get => _logic.IsRounded;
+            set => _logic.IsRounded = value;
         }
 
         [Category(Category), DisplayName("Static")]
         public bool IsStatic
         {
-            get => _button.IsStatic;
-            set => _button.IsStatic = value;
+            get => _logic.IsStatic;
+            set => _logic.IsStatic = value;
         }
 
         [Category(Category), DisplayName("Light")]
         public bool IsLight
         {
-            get => _button.IsLight;
-            set => _button.IsLight = value;
+            get => _logic.IsLight;
+            set => _logic.IsLight = value;
         }
 
         [Category(Category), DisplayName("Text")]
         public override string Text
         {
-            get => _button.Text;
-            set => _button.Text = value;
+            get => _logic.Text;
+            set => _logic.Text = value;
         }
 
         // ================================
@@ -78,50 +78,50 @@ namespace Axiom.Controls
         [Browsable(false)]
         public AxState State
         {
-            get => _button.State;
+            get => _logic.State;
             set
             {
                 if (!Enabled && value != AxState.Disabled)
                 {
                     Enabled = true;
                 }
-                _button.State = value;
+                _logic.State = value;
             }
         }
 
         [Browsable(false)]
         public bool CurveTopLhs
         {
-            get => _button.CurveTopLhs;
-            set => _button.CurveTopLhs = value;
+            get => _logic.CurveTopLhs;
+            set => _logic.CurveTopLhs = value;
         }
 
         [Browsable(false)]
         public bool CurveTopRhs
         {
-            get => _button.CurveTopRhs;
-            set => _button.CurveTopRhs = value;
+            get => _logic.CurveTopRhs;
+            set => _logic.CurveTopRhs = value;
         }
 
         [Browsable(false)]
         public bool CurveBtmLhs
         {
-            get => _button.CurveBtmLhs;
-            set => _button.CurveBtmLhs = value;
+            get => _logic.CurveBtmLhs;
+            set => _logic.CurveBtmLhs = value;
         }
 
         [Browsable(false)]
         public bool CurveBtmRhs
         {
-            get => _button.CurveBtmRhs;
-            set => _button.CurveBtmRhs = value;
+            get => _logic.CurveBtmRhs;
+            set => _logic.CurveBtmRhs = value;
         }
 
         // =============
         // ===== Fields 
         // =============
 
-        private readonly ButtonLogic _button;
+        private readonly ButtonLogic _logic;
 
         // ===================
         // ===== Constructors
@@ -129,13 +129,13 @@ namespace Axiom.Controls
 
         public AxButton() : base()
         {
-            _button = new ButtonLogic(() => Invalidate())
+            _logic = new ButtonLogic(() => Invalidate())
             {
                 Color = AxColor.Primary,
                 Shape = AxShape.Normal
             };
 
-            _button.PropertyChanged += (s, e) => Invalidate();
+            _logic.PropertyChanged += (s, e) => Invalidate();
         }
 
         // =============
@@ -152,7 +152,7 @@ namespace Axiom.Controls
 
         protected override void OnClick(EventArgs e)
         {
-            if (_button.State != AxState.Loading)
+            if (_logic.State != AxState.Loading)
             {
                 this.Focus();
                 base.OnClick(e);
@@ -161,44 +161,44 @@ namespace Axiom.Controls
 
         protected override void OnGotFocus(EventArgs e)
         {
-            _button.HasFocus = this.Focused;
+            _logic.HasFocus = this.Focused;
         }
 
         protected override void OnLostFocus(EventArgs e)
         {
-            _button.HasFocus = this.Focused;
+            _logic.HasFocus = this.Focused;
         }
 
         protected override void OnMouseDown(MouseEventArgs e)
         {
-            if (_button.State != AxState.Loading)
+            if (_logic.State != AxState.Loading)
             {
-                _button.State = AxState.Active;
+                _logic.State = AxState.Active;
             }
         }
 
         protected override void OnMouseUp(MouseEventArgs e)
         {
-            if (_button.State != AxState.Loading)
+            if (_logic.State != AxState.Loading)
             {
-                _button.State = AxState.Hover;
+                _logic.State = AxState.Hover;
             }
         }
 
         protected override void OnMouseEnter(EventArgs e)
         {
-            if (ContainsCursor() && _button.State != AxState.Loading)
+            if (ContainsCursor() && _logic.State != AxState.Loading)
             {
-                _button.State = AxState.Hover;
+                _logic.State = AxState.Hover;
                 Cursor = Cursors.Hand;
             }
         }
 
         protected override void OnMouseLeave(EventArgs e)
         {
-            if (!ContainsCursor() && _button.State != AxState.Loading)
+            if (!ContainsCursor() && _logic.State != AxState.Loading)
             {
-                _button.State = AxState.Normal;
+                _logic.State = AxState.Normal;
                 Cursor = Cursors.Default;
             }
         }
@@ -206,14 +206,14 @@ namespace Axiom.Controls
         protected override void OnEnabledChanged(EventArgs e)
         {
             base.OnEnabledChanged(e);
-            _button.State = Enabled ? AxState.Normal : AxState.Disabled;
+            _logic.State = Enabled ? AxState.Normal : AxState.Disabled;
         }
 
         protected override void OnPaint(PaintEventArgs e)
         {
-            _button.Draw(e.Graphics);
+            _logic.Draw(e.Graphics);
 
-            Size = new Size(_button.Width, _button.Height);
+            Size = new Size(_logic.Width, _logic.Height);
         }
 
 
