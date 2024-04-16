@@ -1,4 +1,5 @@
-﻿using Axiom.Core;
+﻿using Axiom.Controls.Box;
+using Axiom.Core;
 using System;
 using System.Linq;
 using System.Windows.Forms;
@@ -35,7 +36,10 @@ namespace Axiom
 
         private void TogEnable_CheckedChanged(object sender, EventArgs e)
         {
-            RecursivelyUpdate(PnlControls, "Enabled", TogEnable.Checked);
+            foreach (Control control in PnlControls.Controls)
+            {
+                control.Enabled = !control.Enabled;
+            }
         }
 
         private void TogLoading_CheckedChanged(object sender, EventArgs e)
@@ -52,6 +56,14 @@ namespace Axiom
         private void CmbColor_SelectedIndexChanged(object sender, EventArgs e)
         {
             RecursivelyUpdate(PnlControls, "Color", (AxColor)CmbColor.SelectedIndex);
+        }
+
+        private void CmbShadow_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            foreach (var control in PnlControls.Controls.OfType<AxBox>())
+            {
+                control.ShadowDirection = (AxShadowDirection)CmbShadow.SelectedIndex;
+            }
         }
 
         private void RecursivelyUpdate<T>(Control control, string propertyName, T value)
@@ -73,6 +85,11 @@ namespace Axiom
             }
         }
 
+        private void Demo_Load(object sender, EventArgs e)
+        {
 
+        }
+
+        
     }
 }

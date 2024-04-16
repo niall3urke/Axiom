@@ -1,263 +1,159 @@
 ﻿using System.Drawing.Drawing2D;
 using System.Drawing;
+using System.Runtime.CompilerServices;
 
 namespace Axiom.Core.Drawables
 {
-    public class ShadowDrawable : DrawableBase
+    public class ShadowDrawable : BackgroundDrawable
     {
 
-        // Properties
 
-        public float Depth
+        // Properties 
+
+        public AxShadowDirection Direction
         {
-            get => _shadowDepth;
-            set => SetField(ref _shadowDepth, value);
+            get => _direction;
+            set => SetField(ref _direction, value);
         }
 
-        // Fields 
+        public float Blur
+        {
+            get => _blur;
+            set => SetField(ref _blur, value);
+        }
 
-        private float _shadowDepth;
+        public int Depth
+        {
+            get => _depth; 
+            set => SetField(ref _depth, value);
+        }
+
+        // Fields
+
+        private AxShadowDirection _direction;
+
+        private float _blur;
+
+        private int _depth;
 
         // Constructors
 
         public ShadowDrawable() : base()
         {
-            Depth = 20f;
+            Direction = AxShadowDirection.BottomRight;
+            Blur = 0.45f;
+            Depth = 6;
         }
 
-        // Events 
-
-        public override void EnabledChanged(bool enabled) { }
-
-        public override bool MouseLeave(Point p) => !Path.IsVisible(p);
-
-        public override bool MouseEnter(Point p) => Path.IsVisible(p);
-
-        public override bool MouseDown(Point p) => Path.IsVisible(p);
-
-        public override bool MouseUp(Point p) => Path.IsVisible(p);
-
-        public override bool Click(Point p) => Path.IsVisible(p);
-
         // Methods
+
+        // Methods - private
 
         public override void Draw(Graphics g)
         {
             g.SmoothingMode = SmoothingMode.AntiAlias;
 
-            float diameter = Depth;
+            SetShadowLocation();
 
-            float radius = diameter * 0.5f;
-
-            // Get the corner shadows
-
-            using (var c = GetTopLhsCorner(diameter))
-            using (var b = new PathGradientBrush(c))
+            // If it's a circle we can use an ellipse 
+            // instead of the more complicated path.
+            if (IsCircle())
             {
-                b.CenterPoint = new PointF(radius, radius);
-                b.SurroundColors = new Color[] { Color.White };
-                b.CenterColor = Color.FromArgb(26, 10, 10, 10);
-                g.FillPath(b, c);
+                DrawCircle(g);
             }
-
-            using (var c = GetTopRhsCorner(diameter)) //20f))
-            using (var b = new PathGradientBrush(c))
+            else
             {
-                b.CenterPoint = new PointF(Width - radius, radius);
-                b.SurroundColors = new Color[] { Color.White };
-                b.CenterColor = Color.FromArgb(26, 10, 10, 10);
-                g.FillPath(b, c);
-            }
-
-            using (var c = GetBtmLhsCorner(diameter)) //20f))
-            using (var b = new PathGradientBrush(c))
-            {
-                b.CenterPoint = new PointF(radius, Height - radius);
-                b.SurroundColors = new Color[] { Color.White };
-                b.CenterColor = Color.FromArgb(26, 10, 10, 10);
-                g.FillPath(b, c);
-            }
-
-            using (var c = GetBtmRhsCorner(diameter)) //20f))
-            using (var b = new PathGradientBrush(c))
-            {
-                b.CenterPoint = new PointF(Width - radius, Height - radius);
-                b.SurroundColors = new Color[] { Color.White };
-                b.CenterColor = Color.FromArgb(26, 10, 10, 10);
-                g.FillPath(b, c);
-            }
-
-            // Get the rectanglar shadows between the corners
-
-            var tr = GetTopRectangle(radius, diameter, 0.25f);
-            var lr = GetLhsRectangle(radius, diameter, 0.25f);
-            var br = GetBtmRectangle(radius, diameter, 0.25f);
-            var rr = GetRhsRectangle(radius, diameter, 0.25f);
-
-            using (var brush = new LinearGradientBrush(tr, Color.White, Color.FromArgb(26, 10, 10, 10), 90f))
-            {
-                g.FillRectangle(brush, tr);
-            }
-            using (var brush = new LinearGradientBrush(lr, Color.White, Color.FromArgb(26, 10, 10, 10), 0f))
-            {
-                g.FillRectangle(brush, lr);
-            }
-            using (var brush = new LinearGradientBrush(br, Color.White, Color.FromArgb(26, 10, 10, 10), 270f))
-            {
-                g.FillRectangle(brush, br);
-            }
-            using (var brush = new LinearGradientBrush(rr, Color.White, Color.FromArgb(26, 10, 10, 10), 180f))
-            {
-                g.FillRectangle(brush, rr);
+                DrawRoundedRectangle(g);
             }
         }
 
-        // Methods - private
+        // Methods: protected overridable
 
-        private RectangleF GetTopRectangle(float radius, float diameter, float offset)
+        protected override void DrawCircle(Graphics g)
         {
-            float x0 = radius - offset;
-            float y0 = 0;
-            float w = Width - diameter + offset;
-            float h = radius;
+            float x = Location.X;
+            float y = Location.Y;
 
-            return new RectangleF(x0, y0, w, h);
+            // We used to reduce the diameter by 1px to account for the 1px removed
+            // from the control's width and height, but this should be account for
+            // by the control itself, not the drawable... TODO!
+            float d = Radius * 2 - 1;
+
+            using (Path = GetCircle(x, y, d))
+                DrawShadow(g, Path);
         }
 
-        private RectangleF GetBtmRectangle(float radius, float diameter, float offset)
+        protected override void DrawRoundedRectangle(Graphics g)
         {
-            float x0 = radius - offset;
-            float y0 = Height - radius;
-            float w = Width - diameter + offset;
-            float h = radius;
+            float x = Location.X;
+            float y = Location.Y;
+            float h = Height;
+            float w = Width;
+            float r = Radius;
 
-            return new RectangleF(x0, y0, w, h);
+            using (Path = GetRoundedRectangle(x, y, w, h, r))
+                DrawShadow(g, Path);
         }
 
-        private RectangleF GetLhsRectangle(float radius, float diameter, float offset)
+        protected virtual void DrawShadow(Graphics g, GraphicsPath p)
         {
-            float x0 = 0;
-            float y0 = radius - offset;
-            float w = radius;
-            float h = Height - diameter + offset;
+            using (var pgb = new PathGradientBrush(p))
+            {
+                // Set the center to the middle
+                pgb.CenterPoint = new PointF(0.5f * Width, 0.5f * Height);
 
-            return new RectangleF(x0, y0, w, h);
+                // Fade out to the back color
+                pgb.SurroundColors = new Color[] { Color.Transparent };
+
+                // Set the blur scale in the x and y directions
+                pgb.FocusScales = new PointF(Blur, Blur);
+
+                // Set the base color for the shadow
+                pgb.CenterColor = Color.Black;
+
+                // Draw our shadow
+                g.FillPath(pgb, p);
+            }
         }
 
-        private RectangleF GetRhsRectangle(float radius, float diameter, float offset)
+        private void SetShadowLocation()
         {
-            float x0 = Width - radius;
-            float y0 = radius - offset;
-            float w = radius;
-            float h = Height - diameter + offset;
-
-            return new RectangleF(x0, y0, w, h);
-        }
-
-        private GraphicsPath GetTopLhsCorner(float diameter)
-        {
-            var p = PointF.Empty;
-            var s = new SizeF(diameter, diameter);
-            var r = new RectangleF(p, s);
-
-            float x0 = p.X;
-            float y0 = p.Y;
-            float x1 = x0 + diameter * 0.5f;
-            float y1 = y0 + diameter * 0.5f;
-
-            var p1 = new PointF(x1, y0);
-            var p2 = new PointF(x1, y1);
-            var p3 = new PointF(x0, y1);
-
-            var path = new GraphicsPath();
-
-            path.StartFigure();
-            path.AddArc(r, 180, 90);
-            path.AddLine(p1, p2);
-            path.AddLine(p2, p3);
-            path.CloseFigure();
-
-            return path;
-        }
-
-        private GraphicsPath GetBtmLhsCorner(float diameter)
-        {
-            var p = new PointF(0, Height - diameter);
-            var s = new SizeF(diameter, diameter);
-            var r = new RectangleF(p, s);
-
-            float x0 = p.X;
-            float y0 = p.Y;
-            float x1 = x0 + diameter * 0.5f;
-            float y1 = y0 + diameter * 0.5f;
-            float y2 = y0 + diameter;
-
-            var p1 = new PointF(x0, y1);
-            var p2 = new PointF(x1, y1);
-            var p3 = new PointF(x1, y2);
-
-            var path = new GraphicsPath();
-
-            path.StartFigure();
-            path.AddArc(r, 90, 90);
-            path.AddLine(p1, p2);
-            path.AddLine(p2, p3);
-            path.CloseFigure();
-
-            return path;
-        }
-
-        private GraphicsPath GetTopRhsCorner(float diameter)
-        {
-            var path = new GraphicsPath();
-            var p = new PointF(Width - diameter, 0);
-            var s = new SizeF(diameter, diameter);
-            var r = new RectangleF(p, s);
-
-            float x0 = p.X;
-            float y0 = p.Y;
-            float x1 = x0 + diameter * 0.5f;
-            float y1 = y0 + diameter * 0.5f;
-            float x2 = x0 + diameter;
-
-            var p1 = new PointF(x1, y0);
-            var p2 = new PointF(x1, y1);
-            var p3 = new PointF(x2, y1);
-
-            path.StartFigure();
-            path.AddArc(r, 270, 90);
-            path.AddLine(p1, p2);
-            path.AddLine(p2, p3);
-            path.CloseFigure();
-
-            return path;
-        }
-
-        private GraphicsPath GetBtmRhsCorner(float diameter)
-        {
-            var path = new GraphicsPath();
-            var p = new PointF(Width - diameter, Height - diameter);
-            var s = new SizeF(diameter, diameter);
-            var r = new RectangleF(p, s);
-
-            float x0 = p.X;
-            float y0 = p.Y;
-            float x1 = x0 + diameter * 0.5f;
-            float y1 = y0 + diameter * 0.5f;
-            float x2 = x0 + diameter;
-            float y2 = y0 + diameter;
-
-            var p1 = new PointF(x1, y2);
-            var p2 = new PointF(x1, y1);
-            var p3 = new PointF(x2, y1);
-
-            path.StartFigure();
-            path.AddArc(r, 0, 90);
-            path.AddLine(p1, p2);
-            path.AddLine(p2, p3);
-            path.CloseFigure();
-
-            return path;
+            if (Direction == AxShadowDirection.Centered)
+            {
+                Location = new PointF(Depth * 0.5f, Depth * 0.5f);
+            }
+            else if (Direction == AxShadowDirection.Top)
+            {
+                Location = new PointF(Depth * 0.5f, 0);
+            }
+            else if (Direction == AxShadowDirection.Right)
+            {
+                Location = new PointF(Depth, Depth * 0.5f);
+            }
+            else if (Direction == AxShadowDirection.Bottom)
+            {
+                Location = new PointF(Depth * 0.5f, Depth);
+            }
+            else if (Direction == AxShadowDirection.Left)
+            {
+                Location = new PointF(0, Depth * 0.5f);
+            }
+            else if (Direction == AxShadowDirection.TopLeft)
+            {
+                Location = new PointF(0, 0);
+            }
+            else if (Direction == AxShadowDirection.BottomLeft)
+            {
+                Location = new PointF(0, Depth);
+            }
+            else if (Direction == AxShadowDirection.BottomRight)
+            {
+                Location = new PointF(Depth, Depth);
+            }
+            else if (Direction == AxShadowDirection.TopRight)
+            {
+                Location = new PointF(Depth, 0);
+            }
         }
 
 

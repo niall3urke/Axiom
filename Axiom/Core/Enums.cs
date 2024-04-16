@@ -48,4 +48,18 @@
         Center,
         Right
     }
+
+    public enum AxShadowDirection
+    {
+        Centered,
+        Top, 
+        Right, 
+        Bottom,
+        Left,
+        TopRight,
+        BottomRight,
+        BottomLeft,
+        TopLeft, 
+    }
+
 }

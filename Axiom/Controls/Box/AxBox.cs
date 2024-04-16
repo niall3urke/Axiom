@@ -14,6 +14,34 @@ namespace Axiom.Controls.Box
         // ===== Properties: browsable 
         // ============================
 
+        [Category(Category), DisplayName("Shadow")]
+        public bool HasShadow
+        {
+            get => _box.HasShadow;
+            set => _box.HasShadow = value;
+        }
+
+        [Category(Category), DisplayName("Shadow depth")]
+        public int ShadowDepth
+        {
+            get => _box.ShadowDepth;
+            set => _box.ShadowDepth = value;
+        }
+
+        [Category(Category), DisplayName("Shadow blur")]
+        public float ShadowBlur
+        {
+            get => _box.ShadowBlur;
+            set => _box.ShadowBlur = value;
+        }
+
+        [Category(Category), DisplayName("Shadow Direction")]
+        public AxShadowDirection ShadowDirection
+        {
+            get => _box.ShadowDirection;
+            set => _box.ShadowDirection = value;
+        }
+
         [Category(Category), DisplayName("Color")]
         public AxColor Color
         {
@@ -150,8 +178,15 @@ namespace Axiom.Controls.Box
 
         protected override void OnPaint(PaintEventArgs e)
         {
+            if (HasShadow)
+            {
+                Padding = _box.GetPadding();
+            }
+
             _box.Draw(e.Graphics);
         }
+
+
 
     }
 }
