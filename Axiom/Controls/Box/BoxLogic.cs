@@ -2,6 +2,7 @@
 using Axiom.Core;
 using Axiom.Core.Drawables;
 using Axiom.Core.Logic;
+using Axiom.Core.Utils;
 using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
@@ -9,36 +10,52 @@ using System.Windows.Forms;
 
 namespace Axiom.Controls.Box
 {
-    class BoxLogic : LogicBase, IAppearanceProperties
+    class BoxLogic : LogicBase, IAppearanceProperties, ICanCastShadow 
     {
 
         // =================
         // ===== Properties
         // =================
 
-        public bool HasShadow
+        // ==== Properties: ICanCastShadow
+
+        public AxShadowDirection ShadowDirection
         {
-            get => _hasShadow;
-            set => SetField(ref _hasShadow, value);
+            get => _shadow.ShadowDirection;
+            set => _shadow.ShadowDirection = value;
         }
 
-        public int ShadowDepth
+        public Color ShadowColor
         {
-            get => _shadowDepth;
-            set => SetField(ref _shadowDepth, value);
+            get => _shadow.ShadowColor;
+            set => _shadow.ShadowColor = value;
+        }
+
+        public float ShadowOpacity
+        {
+            get => _shadow.ShadowOpacity;
+            set => _shadow.ShadowOpacity = value;
         }
 
         public float ShadowBlur
         {
-            get => _shadowBlur;
-            set => SetField(ref _shadowBlur, value);
+            get => _shadow.ShadowBlur;
+            set => _shadow.ShadowBlur = value;
         }
 
-        public AxShadowDirection ShadowDirection
+        public int ShadowSpread
         {
-            get => _shadowDirection;
-            set => SetField(ref _shadowDirection, value);
+            get => _shadow.ShadowSpread;
+            set => _shadow.ShadowSpread = value;
         }
+
+        public bool HasShadow
+        {
+            get => _shadow.HasShadow;
+            set => _shadow.HasShadow = value;
+        }
+
+        // ===== Properties: IAppearanceProperties
 
         public bool IsOutlined
         {
@@ -56,6 +73,14 @@ namespace Axiom.Controls.Box
         {
             get => _isLight;
             set => SetField(ref _isLight, value);
+        }
+
+        // ===== Properties: other
+
+        public bool IsClickable
+        {
+            get => _isClickable;
+            set => SetField(ref _isClickable, value);
         }
 
         public bool IsRounded
@@ -92,21 +117,19 @@ namespace Axiom.Controls.Box
         // ===== Properties - backing fields
         // ==================================
 
-        private AxShadowDirection _shadowDirection;
-
-        private float _shadowBlur;
-
-        private int _shadowDepth;
+        // ===== Fields: IAppearanceProperties
 
         private bool _isOutlined;
 
         private bool _isInverted;
 
-        private bool _isRounded;
-
-        private bool _hasShadow;
-
         private bool _isLight;
+
+        // ===== Fields: other
+
+        private bool _isClickable;
+
+        private bool _isRounded;
 
         // =============
         // ===== Fields
@@ -124,10 +147,7 @@ namespace Axiom.Controls.Box
         {
             _background = new BackgroundDrawable();
             _shadow = new ShadowDrawable();
-
-            _shadowDirection = AxShadowDirection.BottomRight;
-            _shadowBlur = 0.45f;
-            _shadowDepth = 6;
+            _shadow.PropertyChanged += (s, e) => NotifyPropertyChanged();
         }
 
         // ======================
@@ -157,23 +177,24 @@ namespace Axiom.Controls.Box
             if (!HasShadow)
                 return new Padding();
 
-            int r = (int)Math.Round(ShadowDepth * 0.5);
-            int d = 2 * ShadowDepth;
+            int d = 2 * ShadowSpread;
+
+            int s = ShadowSpread;
 
             if (ShadowDirection == AxShadowDirection.Centered)
-                return new Padding(ShadowDepth);
+                return new Padding(s);
             
             if (ShadowDirection == AxShadowDirection.Top)
-                return new Padding(ShadowDepth, d, ShadowDepth, 0);
+                return new Padding(s, d, s, 0);
 
             if (ShadowDirection == AxShadowDirection.Right)
-                return new Padding(0, ShadowDepth, d, ShadowDepth);
+                return new Padding(0, s, d, s);
 
             if (ShadowDirection == AxShadowDirection.Bottom)
-                return new Padding(ShadowDepth, 0, ShadowDepth, d);
+                return new Padding(s, 0, s, d);
 
             if (ShadowDirection == AxShadowDirection.Left)
-                return new Padding(d, ShadowDepth, 0, ShadowDepth);
+                return new Padding(d, s, 0, s);
 
             if (ShadowDirection == AxShadowDirection.TopLeft)
                 return new Padding(d, d, 0, 0);
@@ -187,6 +208,7 @@ namespace Axiom.Controls.Box
             // Top right
             return new Padding(0, d, d, 0);
         }
+
         // =======================
         // ===== Methods: private  
         // =======================
@@ -204,53 +226,32 @@ namespace Axiom.Controls.Box
 
         private void SetShadowProperties()
         {
-            _shadow.Height = Height - ShadowDepth;
+            _shadow.Radius = GetBackgroundRadius();
 
-            _shadow.Width = Width - ShadowDepth;
+            _shadow.Height = Height - ShadowSpread;
 
-            _shadow.Direction = ShadowDirection;
+            _shadow.Width = Width - ShadowSpread;
 
-            _shadow.Depth = ShadowDepth;
+            _shadow.ShadowDirection = ShadowDirection;
 
-            _shadow.Blur = ShadowBlur;
+            _shadow.ShadowSpread = ShadowSpread;
 
-            if (IsRounded)
-            {
-                _shadow.Radius = 6f;
-
-                if (Shape == AxShape.Small)
-                    _shadow.Radius *= 0.5f;
-
-                else if (Shape == AxShape.Medium)
-                    _shadow.Radius *= 2f;
-
-                else if (Shape == AxShape.Large)
-                    _shadow.Radius *= 3f;
-            }
-            else
-            {
-                _shadow.Radius = 0f;
-            }
+            _shadow.ShadowBlur = ShadowBlur;
         }
 
         private void SetBackgroundProperties()
         {
-            if (HasShadow)
-            {
-                SetBackgroundPositionForShadow();
+            var (h, w) = GetBackgroundHeightAndWidth();
 
-                _background.Height = Height -  2 * ShadowDepth  - 1;
+            var l = GetBackgroundLocation();
 
-                _background.Width  = Width -  2 * ShadowDepth - 1;
-            }
-            else
-            {
-                _background.Location = Point.Empty;
+            var r = GetBackgroundRadius();
 
-                _background.Height = Height - 1;
+            _background.Location = l;
 
-                _background.Width = Width - 1;
-            }
+            _background.Height = h;
+
+            _background.Width = w;
 
             _background.BackgroundColor = BackgroundColor;
 
@@ -258,63 +259,68 @@ namespace Axiom.Controls.Box
 
             _background.BorderColor = BorderColor;
 
-            if (IsRounded)
-            {
-                _background.Radius = 6f;
-
-                if (Shape == AxShape.Small)
-                    _background.Radius *= 0.5f;
-
-                else if (Shape == AxShape.Medium)
-                    _background.Radius *= 2f;
-
-                else if (Shape == AxShape.Large)
-                    _background.Radius *= 3f;
-            }
-            else
-            {
-                _background.Radius = 0f;
-            }
+            _background.Radius = r;
         }
 
-        private void SetBackgroundPositionForShadow()
+        private float GetBackgroundRadius()
         {
+            if (!IsRounded)
+                return 0f;
+
+            if (Shape == AxShape.Normal)
+                return 6f;
+
+            if (Shape == AxShape.Small)
+                return 3f;
+
+            if (Shape == AxShape.Medium)
+                return 12f;
+
+            // Large
+            return 18f;
+        }
+
+        private (int, int) GetBackgroundHeightAndWidth()
+        {
+            if (HasShadow)
+            {
+                return (Height - 2 * ShadowSpread - 1, Width - 2 * ShadowSpread - 1);
+            }
+            return (Height - 1, Width - 1);
+        }
+
+        private PointF GetBackgroundLocation()
+        {
+            if (!HasShadow)
+                return PointF.Empty;
+
             if (ShadowDirection == AxShadowDirection.Centered )
-            {
-                _background.Location = new PointF(ShadowDepth, ShadowDepth);
-            }
+                return new PointF(ShadowSpread, ShadowSpread);
+            
             else if (ShadowDirection == AxShadowDirection.Top)
-            {
-                _background.Location = new PointF(ShadowDepth, ShadowDepth * 2);
-            }
+                return new PointF(ShadowSpread, ShadowSpread * 2);
+            
             else if (ShadowDirection == AxShadowDirection.Right)
-            {
-                _background.Location = new PointF(0, ShadowDepth);
-            }
+                return new PointF(0, ShadowSpread);
+            
             else if (ShadowDirection == AxShadowDirection.Bottom)
-            {
-                _background.Location = new PointF(ShadowDepth, 0);
-            }
+                return new PointF(ShadowSpread, 0);
+            
             else if (ShadowDirection == AxShadowDirection.Left)
-            {
-                _background.Location = new PointF(ShadowDepth * 2, ShadowDepth);
-            }
+                return new PointF(ShadowSpread * 2, ShadowSpread);
+            
             else if (ShadowDirection == AxShadowDirection.TopLeft)
-            {
-                _background.Location = new PointF(ShadowDepth * 2, ShadowDepth * 2);
-            }
+                return new PointF(ShadowSpread * 2, ShadowSpread * 2);
+            
             else if (ShadowDirection == AxShadowDirection.BottomLeft)
-            {
-                _background.Location = new PointF(ShadowDepth * 2, 0);
-            }
+                return new PointF(ShadowSpread * 2, 0);
+            
             else if (ShadowDirection == AxShadowDirection.BottomRight)
-            {
-                _background.Location = new PointF(0, 0);
-            }
-            else if (ShadowDirection == AxShadowDirection.TopRight)
-            {
-                _background.Location = new PointF(0, ShadowDepth * 2);
-            }
+                return new PointF(0, 0);
+            
+            // Top right
+            return new PointF(0, ShadowSpread * 2);
+            
         }
 
 

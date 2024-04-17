@@ -5,7 +5,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{D6006610-B419-40F6-80B4-D3A21EA27608}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
+    <OutputType>Library</OutputType>
     <RootNamespace>Axiom</RootNamespace>
     <AssemblyName>Axiom</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
@@ -149,6 +149,7 @@
     <Compile Include="Core\Enums.cs" />
     <Compile Include="Core\Interfaces.cs" />
     <Compile Include="Core\Logic\LogicBase.cs" />
+    <Compile Include="Core\Utils\Animation.cs" />
     <Compile Include="Core\Utils\EnumDescriptionConverter.cs" />
     <Compile Include="Core\Utils\Rotate.cs" />
     <Compile Include="Demo.cs">
@@ -173,10 +174,8 @@
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
     </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Resources\500x500.black.jpg" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

@@ -5,7 +5,7 @@ namespace Axiom.Core.ColorHelpers
     public class ColorHelper
     {
 
-        protected static IColorHelper GetColorHelper(AxColor c)
+        protected static IColorStateHelper GetColorHelper(AxColor c)
         {
             switch (c)
             {

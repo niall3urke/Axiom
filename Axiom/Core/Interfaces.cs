@@ -52,11 +52,19 @@ namespace Axiom.Core
         bool IsLight { get; set; }
     }
 
-    public interface ISwitchAppearanceProperties
+    public interface ICanCastShadow
     {
-        bool IsOutlined { get; set; }
+        AxShadowDirection ShadowDirection { get; set; }
 
-        bool IsRounded { get; set; }
+        float ShadowOpacity { get; set; }
+
+        Color ShadowColor { get; set; }
+
+        float ShadowBlur { get; set; }
+
+        int ShadowSpread { get; set; }
+
+        bool HasShadow { get; set; }
     }
 
     public interface IAxControl
@@ -76,7 +84,7 @@ namespace Axiom.Core
         bool IsLight { get; set; }
     }
 
-    public interface IColorHelper
+    public interface IColorStateHelper
     {
         Color Default { get; }
 

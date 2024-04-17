@@ -2,12 +2,14 @@
 using Axiom.Core.Bases;
 using System;
 using System.ComponentModel;
+using System.Drawing;
+using System.Security.Policy;
 using System.Windows.Forms;
 
 namespace Axiom.Controls.Box
 {
     [ToolboxItem(true)]
-    public class AxBox : AxPanelBase, IAxControl
+    public class AxBox : AxPanelBase, IAxControl, ICanCastShadow
     {
 
         // ============================
@@ -17,124 +19,150 @@ namespace Axiom.Controls.Box
         [Category(Category), DisplayName("Shadow")]
         public bool HasShadow
         {
-            get => _box.HasShadow;
-            set => _box.HasShadow = value;
+            get => _logic.HasShadow;
+            set => _logic.HasShadow = value;
         }
 
-        [Category(Category), DisplayName("Shadow depth")]
-        public int ShadowDepth
+        [Category(Category), DisplayName("Clickable")]
+        public bool IsClickable
         {
-            get => _box.ShadowDepth;
-            set => _box.ShadowDepth = value;
-        }
-
-        [Category(Category), DisplayName("Shadow blur")]
-        public float ShadowBlur
-        {
-            get => _box.ShadowBlur;
-            set => _box.ShadowBlur = value;
-        }
-
-        [Category(Category), DisplayName("Shadow Direction")]
-        public AxShadowDirection ShadowDirection
-        {
-            get => _box.ShadowDirection;
-            set => _box.ShadowDirection = value;
+            get => _logic.IsClickable;
+            set => _logic.IsClickable = value;
         }
 
         [Category(Category), DisplayName("Color")]
         public AxColor Color
         {
-            get => _box.Color;
-            set => _box.Color = value;
+            get => _logic.Color;
+            set => _logic.Color = value;
         }
 
         [Category(Category), DisplayName("Radius")]
         public AxShape Shape
         {
-            get => _box.Shape;
-            set => _box.Shape = value;
+            get => _logic.Shape;
+            set => _logic.Shape = value;
         }
 
         [Category(Category), DisplayName("Outlined")]
         public bool IsOutlined
         {
-            get => _box.IsOutlined;
-            set => _box.IsOutlined = value;
+            get => _logic.IsOutlined;
+            set => _logic.IsOutlined = value;
         }
         
         [Category(Category), DisplayName("Inverted")]
         public bool IsInverted
         {
-            get => _box.IsInverted;
-            set => _box.IsInverted = value;
+            get => _logic.IsInverted;
+            set => _logic.IsInverted = value;
         }
 
         [Category(Category), DisplayName("Rounded")]
         public bool IsRounded
         {
-            get => _box.IsRounded;
-            set => _box.IsRounded = value;
+            get => _logic.IsRounded;
+            set => _logic.IsRounded = value;
         }
 
         [Category(Category), DisplayName("Light")]
         public bool IsLight
         {
-            get => _box.IsLight;
-            set => _box.IsLight = value;
+            get => _logic.IsLight;
+            set => _logic.IsLight = value;
         }
 
         // ================================
         // ===== Properties: non-browsable
         // ================================
 
+
+        [Browsable(false)]
+        public bool CurveTopLhs
+        {
+            get => _logic.CurveTopLhs;
+            set => _logic.CurveTopLhs = value;
+        }
+
+        [Browsable(false)]
+        public bool CurveTopRhs
+        {
+            get => _logic.CurveTopRhs;
+            set => _logic.CurveTopRhs = value;
+        }
+
+        [Browsable(false)]
+        public bool CurveBtmLhs
+        {
+            get => _logic.CurveBtmLhs;
+            set => _logic.CurveBtmLhs = value;
+        }
+
+        [Browsable(false)]
+        public bool CurveBtmRhs
+        {
+            get => _logic.CurveBtmRhs;
+            set => _logic.CurveBtmRhs = value;
+        }
+
+        // ===== Properties: IAxControl
+
         [Browsable(false)]
         public AxState State
         {
-            get => _box.State;
+            get => _logic.State;
             set
             {
                 if (!Enabled && value != AxState.Disabled)
                 {
                     Enabled = true;
                 }
-                _box.State = value;
+                _logic.State = value;
             }
         }
 
+        // ===== Properties: ICanCastShadow
+
         [Browsable(false)]
-        public bool CurveTopLhs
+        public int ShadowSpread
         {
-            get => _box.CurveTopLhs;
-            set => _box.CurveTopLhs = value;
+            get => _logic.ShadowSpread;
+            set => _logic.ShadowSpread = value;
         }
 
         [Browsable(false)]
-        public bool CurveTopRhs
+        public float ShadowOpacity
         {
-            get => _box.CurveTopRhs;
-            set => _box.CurveTopRhs = value;
+            get => _logic.ShadowOpacity;
+            set => _logic.ShadowOpacity = value;
         }
 
         [Browsable(false)]
-        public bool CurveBtmLhs
+        public float ShadowBlur
         {
-            get => _box.CurveBtmLhs;
-            set => _box.CurveBtmLhs = value;
+            get => _logic.ShadowBlur;
+            set => _logic.ShadowBlur = value;
         }
 
         [Browsable(false)]
-        public bool CurveBtmRhs
+        public Color ShadowColor
         {
-            get => _box.CurveBtmRhs;
-            set => _box.CurveBtmRhs = value;
+            get=> _logic.ShadowColor;
+            set => _logic.ShadowColor = value;
+        }
+
+        [Browsable(false)]
+        public AxShadowDirection ShadowDirection
+        {
+            get => _logic.ShadowDirection;
+            set => _logic.ShadowDirection = value;
         }
 
         // =============
         // ===== Fields 
         // =============
 
-        private readonly BoxLogic _box;
+        private readonly BoxLogic _logic;
 
         // ===================
         // ===== Constructors
@@ -142,14 +170,14 @@ namespace Axiom.Controls.Box
 
         public AxBox() : base()
         {
-            _box = new BoxLogic()
+            _logic = new BoxLogic()
             {
                 Color = AxColor.White,
                 Height = Height,
                 Width = Width,
             };
 
-            _box.PropertyChanged += (s, e) => Invalidate();
+            _logic.PropertyChanged += (s, e) => Invalidate();
         }
 
         // =============
@@ -166,26 +194,45 @@ namespace Axiom.Controls.Box
 
         protected override void OnSizeChanged(EventArgs e)
         {
-            _box.Height = Height;
-            _box.Width = Width;
+            _logic.Height = Height;
+            _logic.Width = Width;
+        }
+
+        protected override void OnMouseEnter(EventArgs e)
+        {
+            if (!_logic.IsClickable)
+                return;
+
+            if (ContainsCursor() && _logic.State != AxState.Loading)
+            {
+                _logic.State = AxState.Hover;
+                Cursor = Cursors.Hand;
+            }
+        }
+
+        protected override void OnMouseLeave(EventArgs e)
+        {
+            if (!_logic.IsClickable)
+                return;
+
+            if (!ContainsCursor() && _logic.State != AxState.Loading)
+            {
+                _logic.State = AxState.Normal;
+                Cursor = Cursors.Default;
+            }
         }
 
         protected override void OnEnabledChanged(EventArgs e)
         {
             base.OnEnabledChanged(e);
-            _box.State = Enabled ? AxState.Normal : AxState.Disabled;
+            _logic.State = Enabled ? AxState.Normal : AxState.Disabled;
         }
 
         protected override void OnPaint(PaintEventArgs e)
         {
-            if (HasShadow)
-            {
-                Padding = _box.GetPadding();
-            }
-
-            _box.Draw(e.Graphics);
+            Padding = _logic.GetPadding();
+            _logic.Draw(e.Graphics);
         }
-
 
 
     }

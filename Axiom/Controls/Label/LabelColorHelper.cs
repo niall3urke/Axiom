@@ -56,7 +56,7 @@ namespace Axiom.Controls.Label
             return Color.FromArgb(128, color.R, color.G, color.B);
         }
 
-        private static Color GetNormal(IColorHelper helper, IAppearanceProperties p, Color transparent)
+        private static Color GetNormal(IColorStateHelper helper, IAppearanceProperties p, Color transparent)
         {
             Color foreColor;
 
@@ -82,7 +82,7 @@ namespace Axiom.Controls.Label
             return foreColor;
         }
 
-        private static Color GetHover(IColorHelper helper, IAppearanceProperties p, Color transparent)
+        private static Color GetHover(IColorStateHelper helper, IAppearanceProperties p, Color transparent)
         {
             Color foreColor;
 
@@ -109,7 +109,7 @@ namespace Axiom.Controls.Label
             return foreColor;
         }
 
-        private static Color GetActive(IColorHelper helper, IAppearanceProperties p, Color transparent)
+        private static Color GetActive(IColorStateHelper helper, IAppearanceProperties p, Color transparent)
         {
             Color foreColor;
 

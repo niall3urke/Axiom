@@ -1,48 +1,92 @@
-﻿using System.Drawing.Drawing2D;
-using System.Drawing;
-using System.Runtime.CompilerServices;
+﻿using System.Drawing;
+using System.Drawing.Drawing2D;
 
 namespace Axiom.Core.Drawables
 {
-    public class ShadowDrawable : BackgroundDrawable
+    public class ShadowDrawable : BackgroundDrawable, ICanCastShadow
     {
 
-
         // Properties 
-
-        public AxShadowDirection Direction
+        
+        public AxShadowDirection ShadowDirection
         {
-            get => _direction;
-            set => SetField(ref _direction, value);
+            get => _shadowDirection;
+            set => SetField(ref _shadowDirection, value);
         }
 
-        public float Blur
+        public float ShadowOpacity
         {
-            get => _blur;
-            set => SetField(ref _blur, value);
+            get => _shadowOpacity;
+            set
+            {
+                if (value < 0)
+                    value = 0;
+
+                if (value > 1)
+                    value = 1;
+
+                SetField(ref _shadowOpacity, value);
+            }
         }
 
-        public int Depth
+        public Color ShadowColor
         {
-            get => _depth; 
-            set => SetField(ref _depth, value);
+            get => _shadowColor;
+            set => SetField(ref _shadowColor, value);
         }
+
+        public float ShadowBlur
+        {
+            get => _shadowBlur;
+            set
+            {
+                if (value < 0)
+                    value = 0;
+
+                if (value > 1)
+                    value = 1;
+
+                SetField(ref _shadowBlur, value);
+            }
+        }
+
+        public int ShadowSpread
+        {
+            get => _shadowSpread;
+            set => SetField(ref _shadowSpread, value);
+        }
+
+        public bool HasShadow
+        {
+            get => _hasShadow;
+            set => SetField(ref _hasShadow, value);
+        }
+
 
         // Fields
 
-        private AxShadowDirection _direction;
+        private AxShadowDirection _shadowDirection;
 
-        private float _blur;
+        private float _shadowOpacity;
 
-        private int _depth;
+        private Color _shadowColor;
+
+        private float _shadowBlur;
+
+        private int _shadowSpread;
+
+        private bool _hasShadow;
 
         // Constructors
 
         public ShadowDrawable() : base()
         {
-            Direction = AxShadowDirection.BottomRight;
-            Blur = 0.45f;
-            Depth = 6;
+            _shadowDirection = AxShadowDirection.BottomRight;
+            _shadowColor = Color.Black;
+            _shadowOpacity = 1f;
+            _shadowBlur = 0.45f;
+            _shadowSpread = 6;
+            _hasShadow = true;
         }
 
         // Methods
@@ -51,6 +95,9 @@ namespace Axiom.Core.Drawables
 
         public override void Draw(Graphics g)
         {
+            if (!HasShadow)
+                return;
+
             g.SmoothingMode = SmoothingMode.AntiAlias;
 
             SetShadowLocation();
@@ -106,53 +153,56 @@ namespace Axiom.Core.Drawables
                 pgb.SurroundColors = new Color[] { Color.Transparent };
 
                 // Set the blur scale in the x and y directions
-                pgb.FocusScales = new PointF(Blur, Blur);
+                pgb.FocusScales = new PointF(ShadowBlur, ShadowBlur);
 
                 // Set the base color for the shadow
-                pgb.CenterColor = Color.Black;
+                pgb.CenterColor = GetShadowColor();
 
                 // Draw our shadow
                 g.FillPath(pgb, p);
             }
         }
 
+        private Color GetShadowColor() =>
+            Color.FromArgb((int)(255 * ShadowOpacity), ShadowColor.R, ShadowColor.G, ShadowColor.B);
+
         private void SetShadowLocation()
         {
-            if (Direction == AxShadowDirection.Centered)
+            if (ShadowDirection == AxShadowDirection.Centered)
             {
-                Location = new PointF(Depth * 0.5f, Depth * 0.5f);
+                Location = new PointF(ShadowSpread * 0.5f, ShadowSpread * 0.5f);
             }
-            else if (Direction == AxShadowDirection.Top)
+            else if (ShadowDirection == AxShadowDirection.Top)
             {
-                Location = new PointF(Depth * 0.5f, 0);
+                Location = new PointF(ShadowSpread * 0.5f, 0);
             }
-            else if (Direction == AxShadowDirection.Right)
+            else if (ShadowDirection == AxShadowDirection.Right)
             {
-                Location = new PointF(Depth, Depth * 0.5f);
+                Location = new PointF(ShadowSpread, ShadowSpread * 0.5f);
             }
-            else if (Direction == AxShadowDirection.Bottom)
+            else if (ShadowDirection == AxShadowDirection.Bottom)
             {
-                Location = new PointF(Depth * 0.5f, Depth);
+                Location = new PointF(ShadowSpread * 0.5f, ShadowSpread);
             }
-            else if (Direction == AxShadowDirection.Left)
+            else if (ShadowDirection == AxShadowDirection.Left)
             {
-                Location = new PointF(0, Depth * 0.5f);
+                Location = new PointF(0, ShadowSpread * 0.5f);
             }
-            else if (Direction == AxShadowDirection.TopLeft)
+            else if (ShadowDirection == AxShadowDirection.TopLeft)
             {
                 Location = new PointF(0, 0);
             }
-            else if (Direction == AxShadowDirection.BottomLeft)
+            else if (ShadowDirection == AxShadowDirection.BottomLeft)
             {
-                Location = new PointF(0, Depth);
+                Location = new PointF(0, ShadowSpread);
             }
-            else if (Direction == AxShadowDirection.BottomRight)
+            else if (ShadowDirection == AxShadowDirection.BottomRight)
             {
-                Location = new PointF(Depth, Depth);
+                Location = new PointF(ShadowSpread, ShadowSpread);
             }
-            else if (Direction == AxShadowDirection.TopRight)
+            else if (ShadowDirection == AxShadowDirection.TopRight)
             {
-                Location = new PointF(Depth, 0);
+                Location = new PointF(ShadowSpread, 0);
             }
         }
 

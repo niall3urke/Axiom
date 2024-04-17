@@ -18,7 +18,7 @@ namespace Axiom.Core.Logic
         // ===== Properties
         // =================
 
-        public AxState State
+        public virtual AxState State
         {
             get => _state;
             set => SetField(ref _state, value);

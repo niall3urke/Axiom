@@ -110,7 +110,7 @@ namespace Axiom.Core.Drawables
 
             // The border pen has a width of 1f, hence -1 from w and h.
             //using (var borderPath = GetRoundedRectangle(x, y, w - 1, h - 1, r))
-            using (Path = GetRoundedRectangle(x, y, w, h, r))
+            Path = GetRoundedRectangle(x, y, w, h, r);
             using (var b = new SolidBrush(BackgroundColor))
             using (var p = new Pen(BorderColor))
             {

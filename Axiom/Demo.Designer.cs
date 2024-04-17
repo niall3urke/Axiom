@@ -30,10 +30,13 @@
         {
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Demo));
             this.PnlControls = new System.Windows.Forms.Panel();
-            this.CmbShadow = new Axiom.Controls.Select.AxSelect();
+            this.TxtShadowBlur = new Axiom.Controls.Input.AxInput();
+            this.TogShadow = new Axiom.Controls.Switch.AxSwitch();
+            this.TxtShadowOpacity = new Axiom.Controls.Input.AxInput();
+            this.CmbShadowDirection = new Axiom.Controls.Select.AxSelect();
+            this.TxtShadowSpread = new Axiom.Controls.Input.AxInput();
             this.axBox4 = new Axiom.Controls.Box.AxBox();
             this.axImage3 = new Axiom.Controls.Image.AxImage();
-            this.axBox3 = new Axiom.Controls.Box.AxBox();
             this.axRadioButton2 = new Axiom.Controls.AxRadioButton();
             this.axLabel4 = new Axiom.Controls.Label.AxLabel();
             this.axLabel3 = new Axiom.Controls.Label.AxLabel();
@@ -55,7 +58,6 @@
             this.TogLight = new Axiom.Controls.Switch.AxSwitch();
             this.TogOutline = new Axiom.Controls.Switch.AxSwitch();
             this.TogRound = new Axiom.Controls.Switch.AxSwitch();
-            this.axLabel5 = new Axiom.Controls.Label.AxLabel();
             this.PnlControls.SuspendLayout();
             this.axBox4.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.axImage3)).BeginInit();
@@ -65,9 +67,7 @@
             // PnlControls
             // 
             this.PnlControls.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.PnlControls.Controls.Add(this.axLabel5);
             this.PnlControls.Controls.Add(this.axBox4);
-            this.PnlControls.Controls.Add(this.axBox3);
             this.PnlControls.Controls.Add(this.axRadioButton2);
             this.PnlControls.Controls.Add(this.axLabel4);
             this.PnlControls.Controls.Add(this.axLabel3);
@@ -81,29 +81,118 @@
             this.PnlControls.Controls.Add(this.axCheckbox1);
             this.PnlControls.Controls.Add(this.axSwitch1);
             this.PnlControls.Controls.Add(this.axInput1);
-            this.PnlControls.Location = new System.Drawing.Point(12, 147);
+            this.PnlControls.Location = new System.Drawing.Point(12, 242);
             this.PnlControls.Name = "PnlControls";
             this.PnlControls.Size = new System.Drawing.Size(1040, 529);
             this.PnlControls.TabIndex = 30;
             // 
-            // CmbShadow
+            // TxtShadowBlur
             // 
-            this.CmbShadow.Color = Axiom.Core.AxColor.Default;
-            this.CmbShadow.IsInverted = false;
-            this.CmbShadow.IsLight = false;
-            this.CmbShadow.IsOutlined = false;
-            this.CmbShadow.IsRounded = false;
-            this.CmbShadow.Items = ((System.Collections.Generic.List<string>)(resources.GetObject("CmbShadow.Items")));
-            this.CmbShadow.Location = new System.Drawing.Point(594, 12);
-            this.CmbShadow.Name = "CmbShadow";
-            this.CmbShadow.SelectedIndex = 0;
-            this.CmbShadow.SelectedItem = null;
-            this.CmbShadow.Shape = Axiom.Core.AxShape.Normal;
-            this.CmbShadow.Size = new System.Drawing.Size(180, 47);
-            this.CmbShadow.State = Axiom.Core.AxState.Normal;
-            this.CmbShadow.TabIndex = 33;
-            this.CmbShadow.Text = "axSelect1";
-            this.CmbShadow.SelectedIndexChanged += new System.EventHandler(this.CmbShadow_SelectedIndexChanged);
+            this.TxtShadowBlur.BackColor = System.Drawing.Color.Transparent;
+            this.TxtShadowBlur.Color = Axiom.Core.AxColor.Default;
+            this.TxtShadowBlur.CurveBtmLhs = true;
+            this.TxtShadowBlur.CurveBtmRhs = true;
+            this.TxtShadowBlur.CurveTopLhs = true;
+            this.TxtShadowBlur.CurveTopRhs = true;
+            this.TxtShadowBlur.Font = new System.Drawing.Font("Segoe UI", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
+            this.TxtShadowBlur.IsInverted = false;
+            this.TxtShadowBlur.IsLight = false;
+            this.TxtShadowBlur.IsOutlined = false;
+            this.TxtShadowBlur.IsRounded = false;
+            this.TxtShadowBlur.Location = new System.Drawing.Point(367, 130);
+            this.TxtShadowBlur.Name = "TxtShadowBlur";
+            this.TxtShadowBlur.Padding = new System.Windows.Forms.Padding(17, 7, 17, 7);
+            this.TxtShadowBlur.Placeholder = "Blur";
+            this.TxtShadowBlur.Shape = Axiom.Core.AxShape.Normal;
+            this.TxtShadowBlur.Size = new System.Drawing.Size(100, 47);
+            this.TxtShadowBlur.State = Axiom.Core.AxState.Normal;
+            this.TxtShadowBlur.TabIndex = 38;
+            this.TxtShadowBlur.TextChanged += new System.EventHandler(this.TxtShadowBlur_TextChanged);
+            // 
+            // TogShadow
+            // 
+            this.TogShadow.BackColor = System.Drawing.SystemColors.Control;
+            this.TogShadow.Checked = false;
+            this.TogShadow.Color = Axiom.Core.AxColor.Primary;
+            this.TogShadow.IsInverted = false;
+            this.TogShadow.IsLight = false;
+            this.TogShadow.IsOutlined = false;
+            this.TogShadow.IsRounded = true;
+            this.TogShadow.IsThin = true;
+            this.TogShadow.Location = new System.Drawing.Point(12, 130);
+            this.TogShadow.Name = "TogShadow";
+            this.TogShadow.Shape = Axiom.Core.AxShape.Normal;
+            this.TogShadow.Size = new System.Drawing.Size(124, 47);
+            this.TogShadow.State = Axiom.Core.AxState.Normal;
+            this.TogShadow.TabIndex = 35;
+            this.TogShadow.Text = "Shadow";
+            this.TogShadow.CheckedChanged += new System.EventHandler(this.TogShadow_CheckedChanged);
+            // 
+            // TxtShadowOpacity
+            // 
+            this.TxtShadowOpacity.BackColor = System.Drawing.Color.Transparent;
+            this.TxtShadowOpacity.Color = Axiom.Core.AxColor.Default;
+            this.TxtShadowOpacity.CurveBtmLhs = true;
+            this.TxtShadowOpacity.CurveBtmRhs = true;
+            this.TxtShadowOpacity.CurveTopLhs = true;
+            this.TxtShadowOpacity.CurveTopRhs = true;
+            this.TxtShadowOpacity.Font = new System.Drawing.Font("Segoe UI", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
+            this.TxtShadowOpacity.IsInverted = false;
+            this.TxtShadowOpacity.IsLight = false;
+            this.TxtShadowOpacity.IsOutlined = false;
+            this.TxtShadowOpacity.IsRounded = false;
+            this.TxtShadowOpacity.Location = new System.Drawing.Point(261, 130);
+            this.TxtShadowOpacity.Name = "TxtShadowOpacity";
+            this.TxtShadowOpacity.Padding = new System.Windows.Forms.Padding(17, 7, 17, 7);
+            this.TxtShadowOpacity.Placeholder = "Opacity";
+            this.TxtShadowOpacity.Shape = Axiom.Core.AxShape.Normal;
+            this.TxtShadowOpacity.Size = new System.Drawing.Size(100, 47);
+            this.TxtShadowOpacity.State = Axiom.Core.AxState.Normal;
+            this.TxtShadowOpacity.TabIndex = 37;
+            this.TxtShadowOpacity.TextChanged += new System.EventHandler(this.TxtShadowOpacity_TextChanged);
+            // 
+            // CmbShadowDirection
+            // 
+            this.CmbShadowDirection.BackColor = System.Drawing.SystemColors.Control;
+            this.CmbShadowDirection.Color = Axiom.Core.AxColor.Default;
+            this.CmbShadowDirection.IsInverted = false;
+            this.CmbShadowDirection.IsLight = false;
+            this.CmbShadowDirection.IsOutlined = false;
+            this.CmbShadowDirection.IsRounded = false;
+            this.CmbShadowDirection.Items = ((System.Collections.Generic.List<string>)(resources.GetObject("CmbShadowDirection.Items")));
+            this.CmbShadowDirection.Location = new System.Drawing.Point(475, 130);
+            this.CmbShadowDirection.Name = "CmbShadowDirection";
+            this.CmbShadowDirection.SelectedIndex = 0;
+            this.CmbShadowDirection.SelectedItem = null;
+            this.CmbShadowDirection.Shape = Axiom.Core.AxShape.Normal;
+            this.CmbShadowDirection.Size = new System.Drawing.Size(180, 47);
+            this.CmbShadowDirection.State = Axiom.Core.AxState.Normal;
+            this.CmbShadowDirection.TabIndex = 33;
+            this.CmbShadowDirection.Text = "axSelect1";
+            this.CmbShadowDirection.SelectedIndexChanged += new System.EventHandler(this.CmbShadow_SelectedIndexChanged);
+            // 
+            // TxtShadowSpread
+            // 
+            this.TxtShadowSpread.BackColor = System.Drawing.Color.Transparent;
+            this.TxtShadowSpread.Color = Axiom.Core.AxColor.Default;
+            this.TxtShadowSpread.CurveBtmLhs = true;
+            this.TxtShadowSpread.CurveBtmRhs = true;
+            this.TxtShadowSpread.CurveTopLhs = true;
+            this.TxtShadowSpread.CurveTopRhs = true;
+            this.TxtShadowSpread.Font = new System.Drawing.Font("Segoe UI", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
+            this.TxtShadowSpread.IsInverted = false;
+            this.TxtShadowSpread.IsLight = false;
+            this.TxtShadowSpread.IsOutlined = false;
+            this.TxtShadowSpread.IsRounded = false;
+            this.TxtShadowSpread.Location = new System.Drawing.Point(155, 130);
+            this.TxtShadowSpread.Name = "TxtShadowSpread";
+            this.TxtShadowSpread.Padding = new System.Windows.Forms.Padding(17, 7, 17, 7);
+            this.TxtShadowSpread.Placeholder = "Spread";
+            this.TxtShadowSpread.Shape = Axiom.Core.AxShape.Normal;
+            this.TxtShadowSpread.Size = new System.Drawing.Size(100, 47);
+            this.TxtShadowSpread.State = Axiom.Core.AxState.Normal;
+            this.TxtShadowSpread.TabIndex = 36;
+            this.TxtShadowSpread.TextChanged += new System.EventHandler(this.TxtShadowSpread_TextChanged);
             // 
             // axBox4
             // 
@@ -114,16 +203,19 @@
             this.axBox4.CurveTopLhs = true;
             this.axBox4.CurveTopRhs = true;
             this.axBox4.HasShadow = true;
+            this.axBox4.IsClickable = false;
             this.axBox4.IsInverted = false;
             this.axBox4.IsLight = false;
             this.axBox4.IsOutlined = false;
             this.axBox4.IsRounded = true;
-            this.axBox4.Location = new System.Drawing.Point(653, 172);
+            this.axBox4.Location = new System.Drawing.Point(509, 172);
             this.axBox4.Name = "axBox4";
             this.axBox4.Padding = new System.Windows.Forms.Padding(0, 0, 12, 12);
             this.axBox4.ShadowBlur = 0.5F;
-            this.axBox4.ShadowDepth = 6;
+            this.axBox4.ShadowColor = System.Drawing.Color.Black;
             this.axBox4.ShadowDirection = Axiom.Core.AxShadowDirection.BottomRight;
+            this.axBox4.ShadowOpacity = 1F;
+            this.axBox4.ShadowSpread = 6;
             this.axBox4.Shape = Axiom.Core.AxShape.Large;
             this.axBox4.Size = new System.Drawing.Size(267, 334);
             this.axBox4.State = Axiom.Core.AxState.Normal;
@@ -150,34 +242,10 @@
             this.axImage3.Location = new System.Drawing.Point(0, 0);
             this.axImage3.Name = "axImage3";
             this.axImage3.Shape = Axiom.Core.AxShape.Large;
-            this.axImage3.Size = new System.Drawing.Size(255, 165);
+            this.axImage3.Size = new System.Drawing.Size(255, 180);
             this.axImage3.State = Axiom.Core.AxState.Normal;
             this.axImage3.TabIndex = 81;
             this.axImage3.TabStop = false;
-            // 
-            // axBox3
-            // 
-            this.axBox3.BackColor = System.Drawing.Color.Transparent;
-            this.axBox3.Color = Axiom.Core.AxColor.White;
-            this.axBox3.CurveBtmLhs = true;
-            this.axBox3.CurveBtmRhs = true;
-            this.axBox3.CurveTopLhs = true;
-            this.axBox3.CurveTopRhs = true;
-            this.axBox3.HasShadow = true;
-            this.axBox3.IsInverted = false;
-            this.axBox3.IsLight = false;
-            this.axBox3.IsOutlined = false;
-            this.axBox3.IsRounded = true;
-            this.axBox3.Location = new System.Drawing.Point(485, 172);
-            this.axBox3.Name = "axBox3";
-            this.axBox3.Padding = new System.Windows.Forms.Padding(0, 0, 12, 12);
-            this.axBox3.ShadowBlur = 0.5F;
-            this.axBox3.ShadowDepth = 6;
-            this.axBox3.ShadowDirection = Axiom.Core.AxShadowDirection.BottomRight;
-            this.axBox3.Shape = Axiom.Core.AxShape.Large;
-            this.axBox3.Size = new System.Drawing.Size(162, 162);
-            this.axBox3.State = Axiom.Core.AxState.Normal;
-            this.axBox3.TabIndex = 145;
             // 
             // axRadioButton2
             // 
@@ -207,7 +275,7 @@
             this.axLabel4.IsOutlined = false;
             this.axLabel4.IsRounded = false;
             this.axLabel4.LabelSize = Axiom.Controls.Label.AxLabelSize.IsSize6;
-            this.axLabel4.Location = new System.Drawing.Point(649, 148);
+            this.axLabel4.Location = new System.Drawing.Point(505, 148);
             this.axLabel4.Name = "axLabel4";
             this.axLabel4.Shape = Axiom.Core.AxShape.Normal;
             this.axLabel4.Size = new System.Drawing.Size(319, 21);
@@ -245,6 +313,7 @@
             this.axBox2.CurveTopLhs = true;
             this.axBox2.CurveTopRhs = true;
             this.axBox2.HasShadow = false;
+            this.axBox2.IsClickable = false;
             this.axBox2.IsInverted = false;
             this.axBox2.IsLight = false;
             this.axBox2.IsOutlined = false;
@@ -252,8 +321,10 @@
             this.axBox2.Location = new System.Drawing.Point(326, 172);
             this.axBox2.Name = "axBox2";
             this.axBox2.ShadowBlur = 0.45F;
-            this.axBox2.ShadowDepth = 5;
+            this.axBox2.ShadowColor = System.Drawing.Color.Black;
             this.axBox2.ShadowDirection = Axiom.Core.AxShadowDirection.Centered;
+            this.axBox2.ShadowOpacity = 1F;
+            this.axBox2.ShadowSpread = 5;
             this.axBox2.Shape = Axiom.Core.AxShape.Large;
             this.axBox2.Size = new System.Drawing.Size(150, 150);
             this.axBox2.State = Axiom.Core.AxState.Normal;
@@ -580,33 +651,16 @@
             this.TogRound.Text = "Round";
             this.TogRound.CheckedChanged += new System.EventHandler(this.TogRound_CheckedChanged);
             // 
-            // axLabel5
-            // 
-            this.axLabel5.AutoSize = true;
-            this.axLabel5.Color = Axiom.Core.AxColor.Primary;
-            this.axLabel5.Font = new System.Drawing.Font("Segoe UI", 16F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
-            this.axLabel5.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(209)))), ((int)(((byte)(178)))));
-            this.axLabel5.IsClickable = false;
-            this.axLabel5.IsInverted = false;
-            this.axLabel5.IsLight = false;
-            this.axLabel5.IsOutlined = false;
-            this.axLabel5.IsRounded = false;
-            this.axLabel5.LabelSize = Axiom.Controls.Label.AxLabelSize.IsSize6;
-            this.axLabel5.Location = new System.Drawing.Point(481, 148);
-            this.axLabel5.Name = "axLabel5";
-            this.axLabel5.Shape = Axiom.Core.AxShape.Normal;
-            this.axLabel5.Size = new System.Drawing.Size(144, 21);
-            this.axLabel5.State = Axiom.Core.AxState.Normal;
-            this.axLabel5.TabIndex = 168;
-            this.axLabel5.Text = "AxBox with shadow";
-            this.axLabel5.Weight = Axiom.Controls.Label.AxFontWeight.Normal;
-            // 
             // Demo
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1074, 702);
-            this.Controls.Add(this.CmbShadow);
+            this.ClientSize = new System.Drawing.Size(1074, 783);
+            this.Controls.Add(this.TxtShadowBlur);
+            this.Controls.Add(this.TogShadow);
+            this.Controls.Add(this.TxtShadowOpacity);
+            this.Controls.Add(this.CmbShadowDirection);
+            this.Controls.Add(this.TxtShadowSpread);
             this.Controls.Add(this.PnlControls);
             this.Controls.Add(this.CmbColor);
             this.Controls.Add(this.CmbShape);
@@ -652,10 +706,12 @@
         private Controls.Box.AxBox axBox2;
         private Controls.Label.AxLabel axLabel2;
         private Controls.AxRadioButton axRadioButton2;
-        private Controls.Box.AxBox axBox3;
-        private Controls.Select.AxSelect CmbShadow;
+        private Controls.Select.AxSelect CmbShadowDirection;
         private Controls.Box.AxBox axBox4;
         private Controls.Image.AxImage axImage3;
-        private Controls.Label.AxLabel axLabel5;
+        private Controls.Input.AxInput TxtShadowSpread;
+        private Controls.Switch.AxSwitch TogShadow;
+        private Controls.Input.AxInput TxtShadowBlur;
+        private Controls.Input.AxInput TxtShadowOpacity;
     }
 }

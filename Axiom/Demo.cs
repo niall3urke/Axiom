@@ -14,6 +14,8 @@ namespace Axiom
             InitializeComponent();
         }
 
+        // IAxControl control events
+
         private void TogRound_CheckedChanged(object sender, EventArgs e)
         {
             RecursivelyUpdate(PnlControls, "IsRounded", TogRound.Checked);
@@ -58,19 +60,56 @@ namespace Axiom
             RecursivelyUpdate(PnlControls, "Color", (AxColor)CmbColor.SelectedIndex);
         }
 
+        private void Demo_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        // ICanCastShadow control events
+
+        private void TogShadow_CheckedChanged(object sender, EventArgs e)
+        {
+            RecursivelyUpdate(PnlControls, "HasShadow", TogShadow.Checked);
+        }
+
+        private void TxtShadowSpread_TextChanged(object sender, EventArgs e)
+        {
+            if (int.TryParse(TxtShadowSpread.Text, out int value))
+                RecursivelyUpdate(PnlControls, "ShadowSpread", value);
+        }
+
+        private void TxtShadowOpacity_TextChanged(object sender, EventArgs e)
+        {
+            if (float.TryParse(TxtShadowOpacity.Text, out float value))
+                RecursivelyUpdate(PnlControls, "ShadowOpacity", value);
+        }
+
+        private void TxtShadowBlur_TextChanged(object sender, EventArgs e)
+        {
+            if (float.TryParse(TxtShadowBlur.Text, out float value))
+                RecursivelyUpdate(PnlControls, "ShadowBlur", value);
+        }
+
         private void CmbShadow_SelectedIndexChanged(object sender, EventArgs e)
         {
-            foreach (var control in PnlControls.Controls.OfType<AxBox>())
-            {
-                control.ShadowDirection = (AxShadowDirection)CmbShadow.SelectedIndex;
-            }
+            RecursivelyUpdate(PnlControls, "ShadowDirection", (AxShadowDirection)CmbShadowDirection.SelectedIndex);
         }
+
+        // Methods
 
         private void RecursivelyUpdate<T>(Control control, string propertyName, T value)
         {
             foreach (Control child in control.Controls)
             {
+                if (child is ICanCastShadow shadow)
+                {
+                    var pi = typeof(ICanCastShadow).GetProperty(propertyName);
 
+                    if (pi != null && pi.CanWrite)
+                    {
+                        pi.SetValue(shadow, value);
+                    }
+                }
                 if (child is IAxControl axControl)
                 {
                     var pi = typeof(IAxControl).GetProperty(propertyName);
@@ -85,11 +124,6 @@ namespace Axiom
             }
         }
 
-        private void Demo_Load(object sender, EventArgs e)
-        {
 
-        }
-
-        
     }
 }

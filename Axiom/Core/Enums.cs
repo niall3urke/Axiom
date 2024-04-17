@@ -62,4 +62,10 @@
         TopLeft, 
     }
 
+    public enum AxShadowAction
+    {
+        Rise,
+        Fall,
+    }
+
 }

@@ -54,7 +54,7 @@ namespace Axiom.Core.ColorHelpers
 
     }
 
-    public struct ColorDefault : IColorHelper
+    public struct ColorDefault : IColorStateHelper
     {
         public Color Default => Color.White;
 
@@ -77,7 +77,7 @@ namespace Axiom.Core.ColorHelpers
         public Color Dark => Color.White;
     }
 
-    public struct ColorPrimary : IColorHelper
+    public struct ColorPrimary : IColorStateHelper
     {
         public Color Default => Color.FromArgb(0, 209, 178);
 
@@ -100,7 +100,7 @@ namespace Axiom.Core.ColorHelpers
         public Color Dark => Color.FromArgb(0, 148, 126);
     }
 
-    public struct ColorLink : IColorHelper
+    public struct ColorLink : IColorStateHelper
     {
         public Color Default => Color.FromArgb(72, 95, 199);
 
@@ -123,7 +123,7 @@ namespace Axiom.Core.ColorHelpers
         public Color Dark => Color.FromArgb(56, 80, 183);
     }
 
-    public struct ColorInfo : IColorHelper
+    public struct ColorInfo : IColorStateHelper
     {
         public Color Default => Color.FromArgb(62, 142, 208);
 
@@ -146,7 +146,7 @@ namespace Axiom.Core.ColorHelpers
         public Color Dark => Color.FromArgb(56, 80, 183);
     }
 
-    public struct ColorSuccess : IColorHelper
+    public struct ColorSuccess : IColorStateHelper
     {
         public Color Default => Color.FromArgb(72, 199, 142);
 
@@ -169,7 +169,7 @@ namespace Axiom.Core.ColorHelpers
         public Color Dark => Color.FromArgb(37, 121, 83);
     }
 
-    public struct ColorWarning : IColorHelper
+    public struct ColorWarning : IColorStateHelper
     {
         public Color Default => Color.FromArgb(255, 224, 138);
 
@@ -192,7 +192,7 @@ namespace Axiom.Core.ColorHelpers
         public Color Dark => Color.FromArgb(148, 108, 0);
     }
 
-    public struct ColorDanger : IColorHelper
+    public struct ColorDanger : IColorStateHelper
     {
         public Color Default => Color.FromArgb(241, 70, 104);
 
@@ -215,7 +215,7 @@ namespace Axiom.Core.ColorHelpers
         public Color Dark => Color.FromArgb(204, 15, 53);
     }
 
-    public struct ColorDark : IColorHelper
+    public struct ColorDark : IColorStateHelper
     {
         public Color Default => Color.FromArgb(54, 54, 54);
 
@@ -238,7 +238,7 @@ namespace Axiom.Core.ColorHelpers
         public Color Dark => Color.White;
     }
 
-    public struct ColorLight : IColorHelper
+    public struct ColorLight : IColorStateHelper
     {
         public Color Default => Color.FromArgb(245, 245, 245);
 
@@ -261,7 +261,7 @@ namespace Axiom.Core.ColorHelpers
         public Color Dark => Color.FromArgb(179, 0, 0, 0);
     }
 
-    public struct ColorBlack : IColorHelper
+    public struct ColorBlack : IColorStateHelper
     {
         public Color Default => Color.FromArgb(10, 10, 10);
 
@@ -284,7 +284,7 @@ namespace Axiom.Core.ColorHelpers
         public Color Dark => Color.White;
     }
 
-    public struct ColorWhite : IColorHelper
+    public struct ColorWhite : IColorStateHelper
     {
         public Color Default => Color.FromArgb(255, 255, 255);
 
@@ -307,7 +307,7 @@ namespace Axiom.Core.ColorHelpers
         public Color Dark => Color.FromArgb(179, 0, 0, 0);
     }
 
-    public struct ColorGhost : IColorHelper
+    public struct ColorGhost : IColorStateHelper
     {
         public Color Default => Color.Transparent;
 

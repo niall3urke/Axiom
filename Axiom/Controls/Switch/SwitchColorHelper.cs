@@ -49,7 +49,7 @@ namespace Axiom.Controls.Switch
             return GetDisabled(background, foreground, border, focus);
         }
 
-        private static (Color, Color, Color, Color) GetNormal(IColorHelper helper, IAppearanceProperties p, Color transparent)
+        private static (Color, Color, Color, Color) GetNormal(IColorStateHelper helper, IAppearanceProperties p, Color transparent)
         {
             Color background, foreground, border, focus;
 
@@ -83,7 +83,7 @@ namespace Axiom.Controls.Switch
             return (background, foreground, border, focus);
         }
 
-        private static (Color, Color, Color, Color) GetHover(IColorHelper helper, IAppearanceProperties p, Color transparent)
+        private static (Color, Color, Color, Color) GetHover(IColorStateHelper helper, IAppearanceProperties p, Color transparent)
         {
             Color background, foreground, border, focus;
 
@@ -118,7 +118,7 @@ namespace Axiom.Controls.Switch
             return (background, foreground, border, focus);
         }
 
-        private static (Color, Color, Color, Color) GetActive(IColorHelper helper, IAppearanceProperties p, Color transparent)
+        private static (Color, Color, Color, Color) GetActive(IColorStateHelper helper, IAppearanceProperties p, Color transparent)
         {
             Color background, foreground, border, focus;
 

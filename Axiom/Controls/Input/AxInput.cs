@@ -4,6 +4,7 @@ using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace Axiom.Controls.Input
 {
@@ -43,6 +44,13 @@ namespace Axiom.Controls.Input
             get => _input.Placeholder;
             set => _input.Placeholder = value;
         }
+
+        //[Category(Category), DisplayName("Text")]
+        //public override string Text
+        //{
+        //    get => Tb.Text;
+        //    set => Tb.Text = value;
+        //}
 
         // TODO
 
@@ -127,6 +135,8 @@ namespace Axiom.Controls.Input
 
             _input.SetTextboxTextToPlaceholder = () => Tb.Text = _input.Placeholder;
 
+            Tb.TextChanged += Tb_TextChanged;
+
             Tb.LostFocus += Tb_LostFocus;
 
             Tb.GotFocus += Tb_GotFocus;
@@ -182,6 +192,11 @@ namespace Axiom.Controls.Input
             {
                 _input.State = AxState.Normal;
             }
+        }
+
+        private void Tb_TextChanged(object sender, EventArgs e)
+        {
+            Text = Tb.Text;
         }
 
         private void Tb_GotFocus(object sender, EventArgs e)
