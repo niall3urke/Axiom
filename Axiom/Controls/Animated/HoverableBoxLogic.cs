@@ -7,11 +7,13 @@ using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Linq;
+using System.Windows;
 using System.Windows.Forms;
+using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrayNotify;
 
-namespace Axiom.Controls.Box
+namespace Axiom.Controls.Animated
 {
-    class BoxLogic : LogicBase, IAppearanceProperties, ICanCastShadow 
+    class HoverableBoxLogic : LogicBase, IAppearanceProperties, ICanCastShadow
     {
 
         // =================
@@ -114,6 +116,12 @@ namespace Axiom.Controls.Box
             set => _background.CurveBtmRhs = value;
         }
 
+        public override AxState State
+        {
+            get => _state;
+            set => SetField(ref _state, value, Animate);
+        }
+
         // ==================================
         // ===== Properties - backing fields
         // ==================================
@@ -132,6 +140,8 @@ namespace Axiom.Controls.Box
 
         private bool _isRounded;
 
+        private AxState _state;
+
         // =============
         // ===== Fields
         // =============
@@ -144,7 +154,7 @@ namespace Axiom.Controls.Box
         // ===== Constructors
         // ===================
 
-        public BoxLogic() : base()
+        public HoverableBoxLogic() : base()
         {
             _background = new BackgroundDrawable();
             _shadow = new ShadowDrawable();
@@ -184,7 +194,7 @@ namespace Axiom.Controls.Box
 
             if (ShadowDirection == AxShadowDirection.Centered)
                 return new Padding(s);
-            
+
             if (ShadowDirection == AxShadowDirection.Top)
                 return new Padding(s, d, s, 0);
 
@@ -204,7 +214,7 @@ namespace Axiom.Controls.Box
                 return new Padding(d, 0, 0, d);
 
             if (ShadowDirection == AxShadowDirection.BottomRight)
-                return new Padding(0, 0, d, d);
+                return new Padding(s, s, s, s);
 
             // Top right
             return new Padding(0, d, d, 0);
@@ -244,11 +254,10 @@ namespace Axiom.Controls.Box
         {
             var (h, w) = GetBackgroundHeightAndWidth();
 
-            var l = GetBackgroundLocation();
-
-            var r = GetRadius();
-
-            _background.Location = l;
+            if (State == AxState.Normal && !_animationInProgress)
+            {
+                _background.Location = GetBackgroundLocation();
+            }
 
             _background.Height = h;
 
@@ -260,7 +269,7 @@ namespace Axiom.Controls.Box
 
             _background.BorderColor = BorderColor;
 
-            _background.Radius = r;
+            _background.Radius = GetRadius();
         }
 
         private float GetRadius()
@@ -295,33 +304,108 @@ namespace Axiom.Controls.Box
             if (!HasShadow)
                 return PointF.Empty;
 
-            if (ShadowDirection == AxShadowDirection.Centered )
+            return new PointF(ShadowSpread, ShadowSpread);
+
+            if (ShadowDirection == AxShadowDirection.Centered)
                 return new PointF(ShadowSpread, ShadowSpread);
-            
+
             else if (ShadowDirection == AxShadowDirection.Top)
                 return new PointF(ShadowSpread, ShadowSpread * 2);
-            
+
             else if (ShadowDirection == AxShadowDirection.Right)
                 return new PointF(0, ShadowSpread);
-            
+
             else if (ShadowDirection == AxShadowDirection.Bottom)
                 return new PointF(ShadowSpread, 0);
-            
+
             else if (ShadowDirection == AxShadowDirection.Left)
                 return new PointF(ShadowSpread * 2, ShadowSpread);
-            
+
             else if (ShadowDirection == AxShadowDirection.TopLeft)
                 return new PointF(ShadowSpread * 2, ShadowSpread * 2);
-            
+
             else if (ShadowDirection == AxShadowDirection.BottomLeft)
                 return new PointF(ShadowSpread * 2, 0);
-            
+
             else if (ShadowDirection == AxShadowDirection.BottomRight)
                 return new PointF(0, 0);
-            
+
             // Top right
             return new PointF(0, ShadowSpread * 2);
-            
+
+        }
+
+        // =========================
+        // ===== Methods: animation
+        // =========================
+
+        private bool _animationInProgress;
+        private void Animate()
+        {
+            if (_animationInProgress)
+                return;
+
+            _animationInProgress = true;
+
+            if (State == AxState.Hover)
+            {
+                Rise();
+            }
+            else
+            {
+                Fall();
+            }
+        }
+
+        private PointF _originalLocation;
+        private float _originalOpacity;
+
+        public void SetInitialLocationAndOpacity()
+        {
+            _originalLocation = _background.Location;
+            _originalOpacity = _shadow.ShadowOpacity;
+        }
+
+        private void Rise()
+        {
+            new Animation((int)_background.Location.X, (int)_background.Location.X - ShadowSpread, 300)
+            {
+                OnChangeIncrement = (value) =>
+                {
+                    _shadow.ShadowOpacity += value * 0.1f;
+                },
+                OnChange = (value) =>
+                {
+                    _background.Location = new PointF(value, value);
+                    NotifyPropertyChanged();
+                },
+                OnComplete = () =>
+                {
+                    _animationInProgress = false;
+                }
+            }.Start();
+        }
+
+        private void Fall()
+        {
+            new Animation((int)_background.Location.X, (int)_background.Location.X + ShadowSpread, 300)
+            {
+                OnChangeIncrement = (value) =>
+                {
+                    _shadow.ShadowOpacity += value * 0.1f;
+                },
+                OnChange = (value) =>
+                {
+                    _background.Location = new PointF(value, value);
+                    NotifyPropertyChanged();
+                },
+                OnComplete = () =>
+                {
+                    _shadow.ShadowOpacity = _originalOpacity;
+                    _background.Location = _originalLocation;
+                    _animationInProgress = false;
+                }
+            }.Start();
         }
 
 

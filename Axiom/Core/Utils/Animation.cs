@@ -10,7 +10,9 @@ namespace Axiom.Core.Utils
         // ===== Actions
         // ==============
 
-        public Action<int> OnChange;
+        public Action<float> OnChangeIncrement;
+
+        public Action<float> OnChange;
 
         public Action OnComplete;
 
@@ -79,7 +81,8 @@ namespace Axiom.Core.Utils
             _currentValue += _increment;
 
             // Update the controls height
-            OnChange?.Invoke((int)_currentValue);
+            OnChange?.Invoke(_currentValue);
+            OnChangeIncrement?.Invoke(_increment);
 
             // Check if we've reached the target height
             if ((_increment < 0 && _currentValue <= _targetValue) ||
@@ -87,6 +90,7 @@ namespace Axiom.Core.Utils
             {
                 // Ensure the target height is always hit
                 OnChange?.Invoke(_targetValue);
+                OnChangeIncrement?.Invoke((int)_increment);
 
                 // Finish up the animation
                 _timer.Stop();

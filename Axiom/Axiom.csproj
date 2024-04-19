@@ -5,7 +5,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{D6006610-B419-40F6-80B4-D3A21EA27608}</ProjectGuid>
-    <OutputType>Library</OutputType>
+    <OutputType>WinExe</OutputType>
     <RootNamespace>Axiom</RootNamespace>
     <AssemblyName>Axiom</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
@@ -31,8 +31,7 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>
-    </StartupObject>
+    <StartupObject>Axiom.Program</StartupObject>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="PresentationCore" />
@@ -54,6 +53,11 @@
     <Reference Include="WindowsFormsIntegration" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controls\Animated\AxHoverableBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Controls\Animated\HoverableBoxLogic.cs" />
+    <Compile Include="Controls\Animated\_AxAnimatedBox.cs" />
     <Compile Include="Controls\Box\AxBox.cs">
       <SubType>Component</SubType>
     </Compile>
@@ -149,6 +153,7 @@
     <Compile Include="Core\Enums.cs" />
     <Compile Include="Core\Interfaces.cs" />
     <Compile Include="Core\Logic\LogicBase.cs" />
+    <Compile Include="Core\Transactions\DesignerTransaction.cs" />
     <Compile Include="Core\Utils\Animation.cs" />
     <Compile Include="Core\Utils\EnumDescriptionConverter.cs" />
     <Compile Include="Core\Utils\Rotate.cs" />
@@ -177,5 +182,6 @@
       <SubType>Designer</SubType>
     </EmbeddedResource>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

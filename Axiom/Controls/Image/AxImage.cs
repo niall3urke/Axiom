@@ -190,6 +190,8 @@ namespace Axiom.Controls.Image
 
         protected override void OnMouseDown(MouseEventArgs e)
         {
+            base.OnMouseDown(e);
+
             if (!_logic.IsClickable)
                 return;
 
@@ -201,6 +203,8 @@ namespace Axiom.Controls.Image
 
         protected override void OnMouseUp(MouseEventArgs e)
         {
+            base.OnMouseUp(e);
+
             if (!_logic.IsClickable)
                 return;
 
@@ -212,6 +216,8 @@ namespace Axiom.Controls.Image
 
         protected override void OnMouseEnter(EventArgs e)
         {
+            base.OnMouseEnter(e);
+
             if (!_logic.IsClickable)
                 return;
 
@@ -224,6 +230,8 @@ namespace Axiom.Controls.Image
 
         protected override void OnMouseLeave(EventArgs e)
         {
+            base.OnMouseLeave(e);
+
             if (!_logic.IsClickable)
                 return;
 

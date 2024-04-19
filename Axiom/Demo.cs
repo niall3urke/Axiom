@@ -124,6 +124,14 @@ namespace Axiom
             }
         }
 
+        private void PnlControls_Paint(object sender, PaintEventArgs e)
+        {
 
+        }
+
+        private void label10_Click(object sender, EventArgs e)
+        {
+
+        }
     }
 }

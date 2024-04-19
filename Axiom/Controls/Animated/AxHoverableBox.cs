@@ -1,15 +1,16 @@
 ﻿using Axiom.Core;
 using Axiom.Core.Bases;
+using Axiom.Core.Utils;
 using System;
+using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
-using System.Security.Policy;
 using System.Windows.Forms;
 
-namespace Axiom.Controls.Box
+namespace Axiom.Controls.Animated
 {
     [ToolboxItem(true)]
-    public class AxBox : AxPanelBase, IAxControl, ICanCastShadow
+    public class AxHoverableBox : AxPanelBase, IAxControl, ICanCastShadow
     {
 
         // ============================
@@ -116,7 +117,9 @@ namespace Axiom.Controls.Box
                 {
                     Enabled = true;
                 }
+                _lastState = _logic.State;
                 _logic.State = value;
+                Animate();
             }
         }
 
@@ -161,15 +164,15 @@ namespace Axiom.Controls.Box
         // ===== Fields 
         // =============
 
-        private readonly BoxLogic _logic;
+        private readonly HoverableBoxLogic _logic;
 
         // ===================
         // ===== Constructors
         // ===================
 
-        public AxBox() : base()
+        public AxHoverableBox() : base()
         {
-            _logic = new BoxLogic()
+            _logic = new HoverableBoxLogic()
             {
                 Color = AxColor.White,
                 Height = Height,
@@ -193,38 +196,50 @@ namespace Axiom.Controls.Box
 
         protected override void OnSizeChanged(EventArgs e)
         {
+            base.OnSizeChanged(e);
+
             _logic.Height = Height;
             _logic.Width = Width;
         }
 
         protected override void OnMouseEnter(EventArgs e)
         {
+            base.OnMouseEnter(e);
+
             if (!_logic.IsClickable)
                 return;
 
-            if (ContainsCursor() && _logic.State != AxState.Loading)
+            if (ContainsCursor() && State != AxState.Loading)
             {
-                _logic.State = AxState.Hover;
+                State = AxState.Hover;
                 Cursor = Cursors.Hand;
             }
         }
 
         protected override void OnMouseLeave(EventArgs e)
         {
+            base.OnMouseLeave(e);
+
             if (!_logic.IsClickable)
                 return;
 
-            if (!ContainsCursor() && _logic.State != AxState.Loading)
+            if (!ContainsCursor() && State != AxState.Loading)
             {
-                _logic.State = AxState.Normal;
+                State = AxState.Normal;
                 Cursor = Cursors.Default;
             }
+        }
+
+        protected override void OnVisibleChanged(EventArgs e)
+        {
+            base.OnVisibleChanged(e);
+            InitalizeAnimationItems();
         }
 
         protected override void OnEnabledChanged(EventArgs e)
         {
             base.OnEnabledChanged(e);
-            _logic.State = Enabled ? AxState.Normal : AxState.Disabled;
+            State = Enabled ? AxState.Normal : AxState.Disabled;
         }
 
         protected override void OnPaint(PaintEventArgs e)
@@ -233,6 +248,138 @@ namespace Axiom.Controls.Box
             _logic.Draw(e.Graphics);
         }
 
+        // =========================
+        // ===== Methods: animation
+        // =========================
+
+        // ===== Fields
+
+        private Dictionary<Control, Point> _originalLocations;
+
+        private Dictionary<Control, Point> _targetLocations;
+
+        private AxState _lastState;
+
+        private bool _animationInProgress;
+
+        // ===== Methods
+
+        private void InitalizeAnimationItems()
+        {
+            // Initialize the original and target location dictionaries
+            
+            _originalLocations = new Dictionary<Control, Point>();
+
+            _targetLocations = new Dictionary<Control, Point>();
+
+            // Loop all the controls
+
+            foreach (Control c in Controls)
+            {
+                // Get the original location of the control
+                if (!_originalLocations.ContainsKey(c))
+                    _originalLocations.Add(c, c.Location);
+
+                // Determine the target, on-hover, location of the control
+                if (!_targetLocations.ContainsKey(c))
+                    _targetLocations.Add(c, new Point(c.Left - ShadowSpread, c.Top - ShadowSpread));
+
+                // Hook up events for animation on hover/leave
+                c.MouseEnter += (s, x) => OnMouseEnter(x);
+                c.MouseLeave += (s, x) => OnMouseLeave(x);
+            }
+
+            // Get the initalize values for the logic too
+            _logic.SetInitialLocationAndOpacity();
+        }
+
+        private void Animate()
+        {
+            if (_lastState == State)
+                return;
+
+            if (_animationInProgress)
+                return;
+
+            _animationInProgress = true;
+
+            if (State == AxState.Hover && _lastState != AxState.Hover)
+            {
+                Rise();
+            }
+            else if (_lastState == AxState.Hover && State == AxState.Normal)
+            {
+                Fall();
+            }
+        }
+
+        private void Rise()
+        {
+            new Animation(0, ShadowSpread, 300)
+            {
+                OnChangeIncrement = (value) =>
+                {
+                    foreach (Control c in Controls)
+                    {
+                        c.Left -= (int)Math.Round(value);
+                        c.Top -= (int)Math.Round(value);
+                    }
+                    Invalidate();
+                },
+                OnComplete = () =>
+                {
+                    // Ensure the control locations are where we expect them
+                    foreach (Control c in Controls)
+                    {
+                        c.Location = _targetLocations[c];
+                    }
+
+                    // Allow animations to be processed again
+                    _animationInProgress = false;
+
+                    // Has the state changed during the animation?
+                    if (State == AxState.Normal)
+                    {
+                        Animate();
+                    }
+                }
+            }.Start();
+        }
+
+        private void Fall()
+        {
+            new Animation(0, ShadowSpread, 300)
+            {
+                OnChangeIncrement = (value) =>
+                {
+                    foreach (Control c in Controls)
+                    {
+                        c.Left += (int)Math.Round(value);
+                        c.Top += (int)Math.Round(value);
+                    }
+                    Invalidate();
+                },
+                OnComplete = () =>
+                {
+                    // Ensure the control locations are where we expect them
+                    foreach (Control c in Controls)
+                    {
+                        c.Location = _originalLocations[c];
+                    }
+
+                    // Allow animations to be processed again
+                    _animationInProgress = false;
+
+                    // Has the state changed during the animation?
+                    if (State == AxState.Hover)
+                    {
+                        Animate();
+                    }
+                }
+            }.Start();
+        }
+
 
     }
 }
+
