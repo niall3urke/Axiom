@@ -1,10 +1,9 @@
 ﻿using Axiom.Core;
 using Axiom.Core.Bases;
-using Axiom.Core.Utils;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace Axiom.Controls.Animated
@@ -108,6 +107,9 @@ namespace Axiom.Controls.Animated
         // ===== Properties: IAxControl
 
         [Browsable(false)]
+        public Color BackgroundColor => _logic.BackgroundColor;
+
+        [Browsable(false)]
         public virtual AxState State
         {
             get => _logic.State;
@@ -117,9 +119,7 @@ namespace Axiom.Controls.Animated
                 {
                     Enabled = true;
                 }
-                _lastState = _logic.State;
                 _logic.State = value;
-                Animate();
             }
         }
 
@@ -180,6 +180,7 @@ namespace Axiom.Controls.Animated
             };
 
             _logic.PropertyChanged += (s, e) => Invalidate();
+            _logic.MoveIncrementChanged = MoveIncrementChanged;
         }
 
         // =============
@@ -233,7 +234,15 @@ namespace Axiom.Controls.Animated
         protected override void OnVisibleChanged(EventArgs e)
         {
             base.OnVisibleChanged(e);
-            InitalizeAnimationItems();
+
+            // Hook up events for animation on hover/leave
+            foreach (Control c in Controls)
+            {
+                c.MouseEnter -= (s, x) => OnMouseEnter(x);
+                c.MouseLeave -= (s, x) => OnMouseLeave(x);
+                c.MouseEnter += (s, x) => OnMouseEnter(x);
+                c.MouseLeave += (s, x) => OnMouseLeave(x);
+            }
         }
 
         protected override void OnEnabledChanged(EventArgs e)
@@ -244,142 +253,29 @@ namespace Axiom.Controls.Animated
 
         protected override void OnPaint(PaintEventArgs e)
         {
-            Padding = _logic.GetPadding();
             _logic.Draw(e.Graphics);
         }
 
-        // =========================
-        // ===== Methods: animation
-        // =========================
-
-        // ===== Fields
-
-        private Dictionary<Control, Point> _originalLocations;
-
-        private Dictionary<Control, Point> _targetLocations;
-
-        private AxState _lastState;
-
-        private bool _animationInProgress;
-
+        // ==============
         // ===== Methods
+        // ==============
 
-        private void InitalizeAnimationItems()
+        private void MoveIncrementChanged(float xOffset, float yOffset)
         {
-            // Initialize the original and target location dictionaries
-            
-            _originalLocations = new Dictionary<Control, Point>();
-
-            _targetLocations = new Dictionary<Control, Point>();
-
-            // Loop all the controls
+            int x = (int)Math.Round(xOffset);
+            int y = (int)Math.Round(yOffset);
 
             foreach (Control c in Controls)
             {
-                // Get the original location of the control
-                if (!_originalLocations.ContainsKey(c))
-                    _originalLocations.Add(c, c.Location);
+                c.Left = Math.Max(c.Left + x, 0);
+                c.Top =  Math.Max(c.Top + y, 0);
 
-                // Determine the target, on-hover, location of the control
-                if (!_targetLocations.ContainsKey(c))
-                    _targetLocations.Add(c, new Point(c.Left - ShadowSpread, c.Top - ShadowSpread));
-
-                // Hook up events for animation on hover/leave
-                c.MouseEnter += (s, x) => OnMouseEnter(x);
-                c.MouseLeave += (s, x) => OnMouseLeave(x);
+                // Changing control location doesn't always invoke a 
+                // redraw, hence call Invalidate to do it manually
+                c.Invalidate();
             }
-
-            // Get the initalize values for the logic too
-            _logic.SetInitialLocationAndOpacity();
-        }
-
-        private void Animate()
-        {
-            if (_lastState == State)
-                return;
-
-            if (_animationInProgress)
-                return;
-
-            _animationInProgress = true;
-
-            if (State == AxState.Hover && _lastState != AxState.Hover)
-            {
-                Rise();
-            }
-            else if (_lastState == AxState.Hover && State == AxState.Normal)
-            {
-                Fall();
-            }
-        }
-
-        private void Rise()
-        {
-            new Animation(0, ShadowSpread, 300)
-            {
-                OnChangeIncrement = (value) =>
-                {
-                    foreach (Control c in Controls)
-                    {
-                        c.Left -= (int)Math.Round(value);
-                        c.Top -= (int)Math.Round(value);
-                    }
-                    Invalidate();
-                },
-                OnComplete = () =>
-                {
-                    // Ensure the control locations are where we expect them
-                    foreach (Control c in Controls)
-                    {
-                        c.Location = _targetLocations[c];
-                    }
-
-                    // Allow animations to be processed again
-                    _animationInProgress = false;
-
-                    // Has the state changed during the animation?
-                    if (State == AxState.Normal)
-                    {
-                        Animate();
-                    }
-                }
-            }.Start();
-        }
-
-        private void Fall()
-        {
-            new Animation(0, ShadowSpread, 300)
-            {
-                OnChangeIncrement = (value) =>
-                {
-                    foreach (Control c in Controls)
-                    {
-                        c.Left += (int)Math.Round(value);
-                        c.Top += (int)Math.Round(value);
-                    }
-                    Invalidate();
-                },
-                OnComplete = () =>
-                {
-                    // Ensure the control locations are where we expect them
-                    foreach (Control c in Controls)
-                    {
-                        c.Location = _originalLocations[c];
-                    }
-
-                    // Allow animations to be processed again
-                    _animationInProgress = false;
-
-                    // Has the state changed during the animation?
-                    if (State == AxState.Hover)
-                    {
-                        Animate();
-                    }
-                }
-            }.Start();
         }
 
 
     }
 }
-

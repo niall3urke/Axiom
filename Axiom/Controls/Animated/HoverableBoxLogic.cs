@@ -6,16 +6,19 @@ using Axiom.Core.Utils;
 using System;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using System.Linq;
-using System.Windows;
 using System.Windows.Forms;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrayNotify;
 
 namespace Axiom.Controls.Animated
 {
     class HoverableBoxLogic : LogicBase, IAppearanceProperties, ICanCastShadow
     {
 
+        // ==============
+        // ===== Actions
+        // ==============
+
+        public Action<float, float> MoveIncrementChanged = delegate(float x, float y) { };
+        
         // =================
         // ===== Properties
         // =================
@@ -157,6 +160,7 @@ namespace Axiom.Controls.Animated
         public HoverableBoxLogic() : base()
         {
             _background = new BackgroundDrawable();
+            _background.PropertyChanged += (s, e) => NotifyPropertyChanged();
             _shadow = new ShadowDrawable();
             _shadow.PropertyChanged += (s, e) => NotifyPropertyChanged();
         }
@@ -290,56 +294,20 @@ namespace Axiom.Controls.Animated
             return 18f;
         }
 
-        private (int, int) GetBackgroundHeightAndWidth()
-        {
-            if (HasShadow)
-            {
-                return (Height - 2 * ShadowSpread - 1, Width - 2 * ShadowSpread - 1);
-            }
-            return (Height - 1, Width - 1);
-        }
+        private (int, int) GetBackgroundHeightAndWidth() => 
+            (Height - 2 * ShadowSpread - 1, Width - 2 * ShadowSpread - 1);
 
-        private PointF GetBackgroundLocation()
-        {
-            if (!HasShadow)
-                return PointF.Empty;
-
-            return new PointF(ShadowSpread, ShadowSpread);
-
-            if (ShadowDirection == AxShadowDirection.Centered)
-                return new PointF(ShadowSpread, ShadowSpread);
-
-            else if (ShadowDirection == AxShadowDirection.Top)
-                return new PointF(ShadowSpread, ShadowSpread * 2);
-
-            else if (ShadowDirection == AxShadowDirection.Right)
-                return new PointF(0, ShadowSpread);
-
-            else if (ShadowDirection == AxShadowDirection.Bottom)
-                return new PointF(ShadowSpread, 0);
-
-            else if (ShadowDirection == AxShadowDirection.Left)
-                return new PointF(ShadowSpread * 2, ShadowSpread);
-
-            else if (ShadowDirection == AxShadowDirection.TopLeft)
-                return new PointF(ShadowSpread * 2, ShadowSpread * 2);
-
-            else if (ShadowDirection == AxShadowDirection.BottomLeft)
-                return new PointF(ShadowSpread * 2, 0);
-
-            else if (ShadowDirection == AxShadowDirection.BottomRight)
-                return new PointF(0, 0);
-
-            // Top right
-            return new PointF(0, ShadowSpread * 2);
-
-        }
+        private PointF GetBackgroundLocation() =>
+                new PointF(ShadowSpread, ShadowSpread);
 
         // =========================
         // ===== Methods: animation
         // =========================
 
         private bool _animationInProgress;
+
+        // Methods: private
+
         private void Animate()
         {
             if (_animationInProgress)
@@ -349,61 +317,91 @@ namespace Axiom.Controls.Animated
 
             if (State == AxState.Hover)
             {
-                Rise();
+                Run();
             }
             else
             {
-                Fall();
+                Run(-1);
+            }
+        }
+        
+        private void Run(int direction = 1)
+        {
+
+            bool rise = direction == 1;
+
+            if (ShadowDirection == AxShadowDirection.Top)
+            {
+                // Move down
+                Move(0, 1 * direction, rise); 
+            }
+            else if (ShadowDirection == AxShadowDirection.Right)
+            {
+                // Move left
+                Move(-1 * direction, 0, rise);
+            }
+            else if (ShadowDirection == AxShadowDirection.Bottom)
+            {
+                // Move up
+                Move(0, -1 * direction, rise); 
+            }
+            else if (ShadowDirection == AxShadowDirection.Left)
+            {
+                // Move right
+                Move(1 * direction, 0, rise);
+            }
+            else if (ShadowDirection == AxShadowDirection.BottomRight)
+            {
+                // Move left and up
+                Move(-1 * direction, -1 * direction, rise);
+            }
+            else if (ShadowDirection == AxShadowDirection.BottomLeft)
+            {
+                // Move right and up
+                Move(1 * direction, -1 * direction, rise);
+            }
+            else if (ShadowDirection == AxShadowDirection.TopLeft)
+            {
+                // Move right and down
+                Move(1 * direction, 1 * direction, rise);
+            }
+            else if (ShadowDirection == AxShadowDirection.TopRight)
+            {
+                // Move left and down
+                Move(-1 * direction, 1 * direction, rise);
             }
         }
 
-        private PointF _originalLocation;
-        private float _originalOpacity;
-
-        public void SetInitialLocationAndOpacity()
+        private void Move(int xDirection, int yDirection, bool rise)
         {
-            _originalLocation = _background.Location;
-            _originalOpacity = _shadow.ShadowOpacity;
-        }
-
-        private void Rise()
-        {
-            new Animation((int)_background.Location.X, (int)_background.Location.X - ShadowSpread, 300)
+            new Animation(0, ShadowSpread, 300)
             {
                 OnChangeIncrement = (value) =>
                 {
-                    _shadow.ShadowOpacity += value * 0.1f;
-                },
-                OnChange = (value) =>
-                {
-                    _background.Location = new PointF(value, value);
-                    NotifyPropertyChanged();
+                    _shadow.ShadowOpacity += value * 0.1f * (rise ? -1 : 1);
+
+                    float xIncrement = value * xDirection;
+
+                    float yIncrement = value * yDirection;
+
+                    _background.Location = new PointF
+                    (
+                        Math.Max(_background.Location.X + xIncrement, 0),
+                        Math.Max(_background.Location.Y + yIncrement, 0)
+                    );
+
+                    MoveIncrementChanged(xIncrement, yIncrement);
                 },
                 OnComplete = () =>
                 {
                     _animationInProgress = false;
-                }
-            }.Start();
-        }
 
-        private void Fall()
-        {
-            new Animation((int)_background.Location.X, (int)_background.Location.X + ShadowSpread, 300)
-            {
-                OnChangeIncrement = (value) =>
-                {
-                    _shadow.ShadowOpacity += value * 0.1f;
-                },
-                OnChange = (value) =>
-                {
-                    _background.Location = new PointF(value, value);
-                    NotifyPropertyChanged();
-                },
-                OnComplete = () =>
-                {
-                    _shadow.ShadowOpacity = _originalOpacity;
-                    _background.Location = _originalLocation;
-                    _animationInProgress = false;
+                    // Check if the state has changed in between the animation
+                    if (rise && State == AxState.Normal || !rise && State == AxState.Hover)
+                    {
+                        // Fire the animation again to ensure consistency
+                        Animate();
+                    }
                 }
             }.Start();
         }

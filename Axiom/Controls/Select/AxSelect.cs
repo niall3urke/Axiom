@@ -7,6 +7,7 @@ using System.ComponentModel;
 using System.Drawing.Design;
 using System.Drawing;
 using System.Windows.Forms;
+using System.IO;
 
 namespace Axiom.Controls.Select
 {
@@ -55,17 +56,23 @@ namespace Axiom.Controls.Select
             set => SetField(ref _isRounded, value, SetControlProperties);
         }
 
-        // TODO;
+        // TODO
 
+        [Category(Category), DisplayName("Outlined")]
         public bool IsOutlined { get; set; }
 
+        [Category(Category), DisplayName("Inverted")]
         public bool IsInverted { get; set; }
 
+        [Category(Category), DisplayName("Light")]
         public bool IsLight { get; set; }
 
         // ================================
         // ===== Properties: non-browsable
         // ================================
+
+        [Browsable(false)]
+        public Color BackgroundColor => BackColor;
 
         [Browsable(false)]
         public int SelectedIndex
@@ -149,7 +156,6 @@ namespace Axiom.Controls.Select
             _selectButton.Location = Point.Empty;
 
             Width = 180;
-
         }
 
         // =============
@@ -163,26 +169,35 @@ namespace Axiom.Controls.Select
             Invalidate();
         }
 
+        protected override void OnInvalidated(InvalidateEventArgs e)
+        {
+            base.OnInvalidated(e);
+
+            // Ensure the backcolor is up to date. Calling invalidate on
+            // AxSelect doesn't seem to fire the OnPaint event. Hence we 
+            // catch it here.
+            if (Parent is IAxControl control)
+            {
+                BackColor = control.BackgroundColor;
+                _selectButton.BackColor = control.BackgroundColor;
+                _selectBox.BackColor = control.BackgroundColor;
+            }
+
+            // Invalidate/redraw the child controls too
+            _selectButton.Invalidate();
+            _selectBox.Invalidate();
+        }
+
         protected override void OnVisibleChanged(EventArgs e)
         {
             base.OnVisibleChanged(e);
 
-            if (Parent != null)
-            {
-                Parent.Controls.Add(_selectBox);
-            }
-
+            CalculateSelectBoxLocation();
             UpdateItems();
         }
 
         protected override void OnLocationChanged(EventArgs e)
         {
-            _selectBox.Location = new Point
-            {
-                X = Location.X + 3,
-                Y = Location.Y + _selectButton.Height + 3
-            };
-
             base.OnLocationChanged(e);
         }
 
@@ -198,6 +213,12 @@ namespace Axiom.Controls.Select
         protected override void OnPaint(PaintEventArgs e)
         {
             base.OnPaint(e);
+
+            if (Parent is IAxControl control)
+            {
+                BackColor = control.BackgroundColor;
+            }
+
             Height = _selectButton.Height;
         }
 
@@ -243,6 +264,32 @@ namespace Axiom.Controls.Select
         // ==============
         // ===== Methods
         // ==============
+
+        private void CalculateSelectBoxLocation()
+        {
+            // Always has to be a parent, it's hosted control
+            Control parent = Parent;
+
+            // Keep going until we get the root
+            while (parent.Parent != null)
+                parent = parent.Parent;
+
+            // Add the select to the root so it's displayed over everything else
+            parent.Controls.Add(_selectBox);
+
+            // Get the location as coordinates of the screen
+            var abs = PointToScreen(Location);
+
+            // Now get the location relative to the parent 
+            var rel = parent.PointToClient(abs);
+
+            // Determine the location of the select box in the parent
+            _selectBox.Location = new Point
+            {
+                X = rel.X - Location.X + 3,
+                Y = rel.Y - Location.Y + _selectButton.Height + 3
+            };
+        }
 
         private void SetControlProperties()
         {
@@ -332,7 +379,6 @@ namespace Axiom.Controls.Select
             _selectButton.Text = _selectedItem.Text;
             _selectButton.ClosedState();
             _selectBox.Close();
-
         }
 
 

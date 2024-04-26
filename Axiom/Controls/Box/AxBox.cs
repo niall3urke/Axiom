@@ -107,6 +107,9 @@ namespace Axiom.Controls.Box
         // ===== Properties: IAxControl
 
         [Browsable(false)]
+        public Color BackgroundColor => _logic.BackgroundColor;
+
+        [Browsable(false)]
         public virtual AxState State
         {
             get => _logic.State;

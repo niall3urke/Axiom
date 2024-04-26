@@ -69,6 +69,8 @@ namespace Axiom.Core
 
     public interface IAxControl
     {
+        Color BackgroundColor { get; }
+
         bool IsOutlined { get; set; }
 
         bool IsInverted { get; set; }

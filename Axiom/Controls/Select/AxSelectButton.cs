@@ -6,7 +6,7 @@ using System.Windows.Forms;
 
 namespace Axiom.Controls.Select
 {
-    public class AxSelectButton : AxControlBase
+    public class AxSelectButton : AxControlBase, IAxControl
     {
 
         // =================
@@ -15,70 +15,80 @@ namespace Axiom.Controls.Select
 
         public AxState State
         {
-            get => _select.State;
+            get => _logic.State;
             set
             {
                 if (!Enabled && value != AxState.Disabled)
                 {
                     Enabled = true;
                 }
-                _select.State = value;
+                _logic.State = value;
             }
         }
 
         public AxColor Color
         {
-            get => _select.Color;
-            set => _select.Color = value;
+            get => _logic.Color;
+            set => _logic.Color = value;
         }
 
         public AxShape Shape
         {
-            get => _select.Shape;
-            set => _select.Shape = value;
+            get => _logic.Shape;
+            set => _logic.Shape = value;
         }
 
         public bool IsRounded
         {
-            get => _select.IsRounded;
-            set => _select.IsRounded = value;
+            get => _logic.IsRounded;
+            set => _logic.IsRounded = value;
         }
 
         public override string Text
         {
-            get => _select.Text;
-            set => _select.Text = value;
+            get => _logic.Text;
+            set => _logic.Text = value;
         }
 
         public bool CurveTopLhs
         {
-            get => _select.CurveTopLhs;
-            set => _select.CurveTopLhs = value;
+            get => _logic.CurveTopLhs;
+            set => _logic.CurveTopLhs = value;
         }
 
         public bool CurveTopRhs
         {
-            get => _select.CurveTopRhs;
-            set => _select.CurveTopRhs = value;
+            get => _logic.CurveTopRhs;
+            set => _logic.CurveTopRhs = value;
         }
 
         public bool CurveBtmLhs
         {
-            get => _select.CurveBtmLhs;
-            set => _select.CurveBtmLhs = value;
+            get => _logic.CurveBtmLhs;
+            set => _logic.CurveBtmLhs = value;
         }
 
         public bool CurveBtmRhs
         {
-            get => _select.CurveBtmRhs;
-            set => _select.CurveBtmRhs = value;
+            get => _logic.CurveBtmRhs;
+            set => _logic.CurveBtmRhs = value;
         }
+
+        public Color BackgroundColor => _logic.BackgroundColor;
+
+        // TODO
+
+        public bool IsOutlined { get; set; }
+
+        public bool IsInverted { get; set; }
+
+        public bool IsLight { get; set; }
 
         // =============
         // ===== Fields 
         // =============
 
-        private readonly SelectButtonLogic _select;
+        private readonly SelectButtonLogic _logic;
 
         // ===================
         // ===== Constructors
@@ -86,14 +96,14 @@ namespace Axiom.Controls.Select
 
         public AxSelectButton() : base()
         {
-            _select = new SelectButtonLogic(() => Invalidate())
+            _logic = new SelectButtonLogic(() => Invalidate())
             {
                 Text = "Select..."
             };
 
-            _select.PropertyChanged += (s, e) => Invalidate();
+            _logic.PropertyChanged += (s, e) => Invalidate();
 
-            Height = _select.Height;
+            Height = _logic.Height;
         }
 
         // =============
@@ -110,18 +120,18 @@ namespace Axiom.Controls.Select
 
         protected override void OnSizeChanged(EventArgs e)
         {
-            _select.Width = Width;
-            Height = _select.Height;
+            _logic.Width = Width;
+            Height = _logic.Height;
             base.OnSizeChanged(e);
         }
 
         protected override void OnClick(EventArgs e)
         {
-            if (_select.State != AxState.Loading)
+            if (_logic.State != AxState.Loading)
             {
                 Focus();
 
-                _select.Click(Cursor.Position);
+                _logic.Click(Cursor.Position);
 
                 base.OnClick(e);
             }
@@ -129,17 +139,17 @@ namespace Axiom.Controls.Select
 
         protected override void OnGotFocus(EventArgs e)
         {
-            _select.HasFocus = Focused;
+            _logic.HasFocus = Focused;
             base.OnGotFocus(e);
         }
 
         protected override void OnLostFocus(EventArgs e)
         {
-            _select.HasFocus = Focused;
+            _logic.HasFocus = Focused;
 
-            if (!_select.HasFocus)
+            if (!_logic.HasFocus)
             {
-                _select.ClosedState();
+                _logic.ClosedState();
             }
 
             base.OnLostFocus(e);
@@ -147,34 +157,34 @@ namespace Axiom.Controls.Select
 
         protected override void OnMouseDown(MouseEventArgs e)
         {
-            if (_select.State != AxState.Loading)
+            if (_logic.State != AxState.Loading)
             {
-                _select.State = AxState.Active;
+                _logic.State = AxState.Active;
             }
         }
 
         protected override void OnMouseUp(MouseEventArgs e)
         {
-            if (_select.State != AxState.Loading)
+            if (_logic.State != AxState.Loading)
             {
-                _select.State = AxState.Hover;
+                _logic.State = AxState.Hover;
             }
         }
 
         protected override void OnMouseEnter(EventArgs e)
         {
-            if (ContainsCursor() && _select.State != AxState.Loading)
+            if (ContainsCursor() && _logic.State != AxState.Loading)
             {
-                _select.State = AxState.Hover;
+                _logic.State = AxState.Hover;
                 Cursor = Cursors.Hand;
             }
         }
 
         protected override void OnMouseLeave(EventArgs e)
         {
-            if (!ContainsCursor() && _select.State != AxState.Loading)
+            if (!ContainsCursor() && _logic.State != AxState.Loading)
             {
-                _select.State = AxState.Normal;
+                _logic.State = AxState.Normal;
                 Cursor = Cursors.Default;
             }
         }
@@ -182,25 +192,25 @@ namespace Axiom.Controls.Select
         protected override void OnEnabledChanged(EventArgs e)
         {
             base.OnEnabledChanged(e);
-            _select.State = Enabled ? AxState.Normal : AxState.Disabled;
+            _logic.State = Enabled ? AxState.Normal : AxState.Disabled;
         }
 
         protected override void OnPaint(PaintEventArgs e)
         {
-            _select.DesignMode = DesignMode;
+            _logic.DesignMode = DesignMode;
 
-            _select.Draw(e.Graphics);
+            _logic.Draw(e.Graphics);
 
-            Size = new Size(Width, _select.Height);
+            Size = new Size(Width, _logic.Height);
         }
 
         // ==============
         // ===== Methods
         // ==============
 
-        public void OpenState() => _select.OpenState();
+        public void OpenState() => _logic.OpenState();
 
-        public void ClosedState() => _select.ClosedState();
+        public void ClosedState() => _logic.ClosedState();
 
 
     }

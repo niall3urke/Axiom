@@ -76,6 +76,9 @@ namespace Axiom.Controls
         // ================================
 
         [Browsable(false)]
+        public Color BackgroundColor => _logic.BackgroundColor;
+
+        [Browsable(false)]
         public AxState State
         {
             get => _logic.State;
@@ -211,6 +214,11 @@ namespace Axiom.Controls
 
         protected override void OnPaint(PaintEventArgs e)
         {
+            if (Parent is IAxControl control)
+            {
+                BackColor = control.BackgroundColor;
+            }
+
             _logic.Draw(e.Graphics);
 
             Size = new Size(_logic.Width, _logic.Height);

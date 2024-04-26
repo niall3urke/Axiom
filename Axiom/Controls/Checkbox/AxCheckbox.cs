@@ -25,50 +25,50 @@ namespace Axiom.Controls.Checkbox
         [Category(Category), DisplayName("Color")]
         public AxColor Color
         {
-            get => _button.Color;
-            set => _button.Color = value;
+            get => _logic.Color;
+            set => _logic.Color = value;
         }
 
         [Category(Category), DisplayName("Shape")]
         public AxShape Shape
         {
-            get => _button.Shape;
-            set => _button.Shape = value;
+            get => _logic.Shape;
+            set => _logic.Shape = value;
         }
 
         [Category(Category), DisplayName("Outlined")]
         public bool IsOutlined
         {
-            get => _button.IsOutlined;
-            set => _button.IsOutlined = value;
+            get => _logic.IsOutlined;
+            set => _logic.IsOutlined = value;
         }
 
         [Category(Category), DisplayName("Inverted")]
         public bool IsInverted
         {
-            get => _button.IsInverted;
-            set => _button.IsInverted = value;
+            get => _logic.IsInverted;
+            set => _logic.IsInverted = value;
         }
 
         [Category(Category), DisplayName("Rounded")]
         public bool IsRounded
         {
-            get => _button.IsRounded;
-            set => _button.IsRounded = value;
+            get => _logic.IsRounded;
+            set => _logic.IsRounded = value;
         }
 
         [Category(Category), DisplayName("Light")]
         public bool IsLight
         {
-            get => _button.IsLight;
-            set => _button.IsLight = value;
+            get => _logic.IsLight;
+            set => _logic.IsLight = value;
         }
 
         [Category(Category), DisplayName("Text")]
         public override string Text
         {
-            get => _button.Text;
-            set => _button.Text = value;
+            get => _logic.Text;
+            set => _logic.Text = value;
         }
 
         [Category(Category), DisplayName("Checked")]
@@ -83,16 +83,19 @@ namespace Axiom.Controls.Checkbox
         // ================================
 
         [Browsable(false)]
+        public Color BackgroundColor => _logic.BackgroundColor;
+
+        [Browsable(false)]
         public AxState State
         {
-            get => _button.State;
+            get => _logic.State;
             set
             {
                 if (!Enabled && value != AxState.Disabled)
                 {
                     Enabled = true;
                 }
-                _button.State = value;
+                _logic.State = value;
             }
         }
 
@@ -100,7 +103,7 @@ namespace Axiom.Controls.Checkbox
         // ===== Fields 
         // =============
 
-        private readonly CheckboxLogic _button;
+        private readonly CheckboxLogic _logic;
 
         private bool _checked;
 
@@ -110,14 +113,14 @@ namespace Axiom.Controls.Checkbox
 
         public AxCheckbox() : base()
         {
-            _button = new CheckboxLogic()
+            _logic = new CheckboxLogic()
             {
                 Color = AxColor.Default,
                 Shape = AxShape.Normal,
                 IsOutlined = true,
             };
 
-            _button.PropertyChanged += (s, e) => Invalidate();
+            _logic.PropertyChanged += (s, e) => Invalidate();
         }
 
         // =============
@@ -134,7 +137,7 @@ namespace Axiom.Controls.Checkbox
 
         protected override void OnClick(EventArgs e)
         {
-            if (_button.State != AxState.Loading || _button.State != AxState.Disabled)
+            if (_logic.State != AxState.Loading || _logic.State != AxState.Disabled)
             {
                 Checked = !Checked;
                 Focus();
@@ -143,28 +146,28 @@ namespace Axiom.Controls.Checkbox
 
         protected override void OnGotFocus(EventArgs e)
         {
-            _button.HasFocus = Focused;
+            _logic.HasFocus = Focused;
         }
 
         protected override void OnLostFocus(EventArgs e)
         {
-            _button.HasFocus = Focused;
+            _logic.HasFocus = Focused;
         }
 
         protected override void OnMouseEnter(EventArgs e)
         {
-            if (ContainsCursor() && _button.State != AxState.Active)
+            if (ContainsCursor() && _logic.State != AxState.Active)
             {
-                _button.State = AxState.Hover;
+                _logic.State = AxState.Hover;
             }
             Cursor = Cursors.Hand;
         }
 
         protected override void OnMouseLeave(EventArgs e)
         {
-            if (!ContainsCursor() && _button.State != AxState.Active)
+            if (!ContainsCursor() && _logic.State != AxState.Active)
             {
-                _button.State = AxState.Normal;
+                _logic.State = AxState.Normal;
             }
             Cursor = Cursors.Default;
         }
@@ -172,14 +175,19 @@ namespace Axiom.Controls.Checkbox
         protected override void OnEnabledChanged(EventArgs e)
         {
             base.OnEnabledChanged(e);
-            _button.State = Enabled ? AxState.Normal : AxState.Disabled;
+            _logic.State = Enabled ? AxState.Normal : AxState.Disabled;
         }
 
         protected override void OnPaint(PaintEventArgs e)
         {
-            _button.Draw(e.Graphics);
+            if (Parent is IAxControl control)
+            {
+                BackColor = control.BackgroundColor;
+            }
 
-            Size = new Size(_button.Width, _button.Height);
+            _logic.Draw(e.Graphics);
+
+            Size = new Size(_logic.Width, _logic.Height);
         }
 
         // =======================

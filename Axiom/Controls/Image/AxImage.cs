@@ -99,6 +99,18 @@ namespace Axiom.Controls.Image
         // ================================
 
         [Browsable(false)]
+        public Color BackgroundColor
+        {
+            get
+            {
+                if (Parent is IAxControl control)
+                    return control.BackgroundColor;
+
+                return BackColor;
+            }
+        }
+
+        [Browsable(false)]
         public AxColor Color { get; set; }
 
         [Browsable(false)]
@@ -250,6 +262,12 @@ namespace Axiom.Controls.Image
 
         protected override void OnPaint(PaintEventArgs e)
         {
+            if (Parent is IAxControl control)
+            {
+                BackColor = control.BackgroundColor;
+            }
+
+
             // Ensure this is always up to date
             _logic.BorderColor = BackColor;
 

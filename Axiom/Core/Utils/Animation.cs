@@ -20,9 +20,9 @@ namespace Axiom.Core.Utils
         // ===== Fields: backing fields
         // =============================
 
-        private int _originalValue;
+        private float _originalValue;
 
-        private int _targetValue;
+        private float _targetValue;
 
         private int _frameRate;
 
@@ -44,7 +44,7 @@ namespace Axiom.Core.Utils
         // ===== Constructors
         // ===================
 
-        public Animation(int originalValue, int targetValue, int duration = 500, int frameRate = 60)
+        public Animation(float originalValue, float targetValue, int duration = 500, int frameRate = 60)
         {
             // Init fields
             _originalValue = originalValue;
@@ -90,7 +90,7 @@ namespace Axiom.Core.Utils
             {
                 // Ensure the target height is always hit
                 OnChange?.Invoke(_targetValue);
-                OnChangeIncrement?.Invoke((int)_increment);
+                OnChangeIncrement?.Invoke(_increment);
 
                 // Finish up the animation
                 _timer.Stop();
@@ -124,7 +124,7 @@ namespace Axiom.Core.Utils
         // ===== Properties
         // =================
 
-        public int OriginalValue
+        public float OriginalValue
         {
             get { return _originalValue; }
             set
@@ -136,7 +136,7 @@ namespace Axiom.Core.Utils
             }
         }
 
-        public int TargetValue
+        public float TargetValue
         {
             get { return _targetValue; }
             set

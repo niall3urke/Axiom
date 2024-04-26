@@ -3,6 +3,8 @@ using Axiom.Core.Bases;
 using Axiom.Core.Utils;
 using System;
 using System.ComponentModel;
+using System.Drawing;
+using System.Security.Policy;
 using System.Windows.Forms;
 
 namespace Axiom.Controls.Label
@@ -69,6 +71,9 @@ namespace Axiom.Controls.Label
                 _logic.State = value;
             }
         }
+
+        [Browsable(false)]
+        public Color BackgroundColor => _logic.BackgroundColor;
 
         [Browsable(false)]
         public bool IsInverted { get; set; }
@@ -171,6 +176,11 @@ namespace Axiom.Controls.Label
 
         protected override void OnPaint(PaintEventArgs e)
         {
+            if (Parent is IAxControl control)
+            {
+                BackColor = control.BackgroundColor;
+            }
+
             // Set the logic properties for the font/forecolor
             _logic.Update();
 

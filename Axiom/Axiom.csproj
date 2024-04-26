@@ -5,7 +5,7 @@
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{D6006610-B419-40F6-80B4-D3A21EA27608}</ProjectGuid>
-    <OutputType>WinExe</OutputType>
+    <OutputType>Library</OutputType>
     <RootNamespace>Axiom</RootNamespace>
     <AssemblyName>Axiom</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
@@ -31,7 +31,8 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <PropertyGroup>
-    <StartupObject>Axiom.Program</StartupObject>
+    <StartupObject>
+    </StartupObject>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="PresentationCore" />
@@ -57,7 +58,6 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="Controls\Animated\HoverableBoxLogic.cs" />
-    <Compile Include="Controls\Animated\_AxAnimatedBox.cs" />
     <Compile Include="Controls\Box\AxBox.cs">
       <SubType>Component</SubType>
     </Compile>

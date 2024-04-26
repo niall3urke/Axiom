@@ -1,17 +1,10 @@
 ﻿using Axiom.Core;
 using Axiom.Core.Drawables;
-using Axiom.Core.Utils;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Drawing2D;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using static System.Windows.Forms.AxHost;
-using static System.Windows.Forms.VisualStyles.VisualStyleElement.TrayNotify;
 
 namespace Axiom.Controls.Image
 {

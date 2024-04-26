@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace Axiom.Core.Bases
@@ -8,7 +9,7 @@ namespace Axiom.Core.Bases
     [ToolboxItem(false)]
     public abstract class AxControlBase : Control
     {
-
+        
         // Consts
 
         protected const string Category = "Axiom";

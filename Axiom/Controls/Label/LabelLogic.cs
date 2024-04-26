@@ -68,9 +68,15 @@ namespace Axiom.Controls.Label
             set => SetField(ref _isLight, value);
         }
 
-        public Color ForeColor { get; private set;  }
+        public Color ForeColor { get; private set; }
 
         public Font Font { get; private set; }
+
+        public Color BackgroundColor { get; set; }
+
+        public Color BorderColor { get; set; }
+
+        public Color FocusColor { get; set; }
 
         // ==================================
         // ===== Properties - backing fields

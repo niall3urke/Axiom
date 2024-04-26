@@ -20,39 +20,30 @@ namespace Axiom.Controls.Input
         [Category(Category), DisplayName("Color")]
         public AxColor Color
         {
-            get => _input.Color;
-            set => _input.Color = value;
+            get => _logic.Color;
+            set => _logic.Color = value;
         }
 
         [Category(Category), DisplayName("Shape")]
         public AxShape Shape
         {
-            get => _input.Shape;
-            set => _input.Shape = value;
+            get => _logic.Shape;
+            set => _logic.Shape = value;
         }
 
         [Category(Category), DisplayName("Rounded")]
         public bool IsRounded
         {
-            get => _input.IsRounded;
-            set => _input.IsRounded = value;
+            get => _logic.IsRounded;
+            set => _logic.IsRounded = value;
         }
 
         [Category(Category), DisplayName("Placeholder")]
         public string Placeholder
         {
-            get => _input.Placeholder;
-            set => _input.Placeholder = value;
+            get => _logic.Placeholder;
+            set => _logic.Placeholder = value;
         }
-
-        //[Category(Category), DisplayName("Text")]
-        //public override string Text
-        //{
-        //    get => Tb.Text;
-        //    set => Tb.Text = value;
-        //}
-
-        // TODO
 
         [Category(Category), DisplayName("Outlined")]
         public bool IsOutlined { get; set; }
@@ -70,52 +61,55 @@ namespace Axiom.Controls.Input
         [Browsable(false)]
         public AxState State
         {
-            get => _input.State;
+            get => _logic.State;
             set
             {
                 if (!Enabled && value != AxState.Disabled)
                 {
                     Enabled = true;
                 }
-                _input.State = value;
+                _logic.State = value;
             }
         }
 
         [Browsable(false)]
         public bool CurveTopLhs
         {
-            get => _input.CurveTopLhs;
-            set => _input.CurveTopLhs = value;
+            get => _logic.CurveTopLhs;
+            set => _logic.CurveTopLhs = value;
         }
 
         [Browsable(false)]
         public bool CurveTopRhs
         {
-            get => _input.CurveTopRhs;
-            set => _input.CurveTopRhs = value;
+            get => _logic.CurveTopRhs;
+            set => _logic.CurveTopRhs = value;
         }
 
         [Browsable(false)]
         public bool CurveBtmLhs
         {
-            get => _input.CurveBtmLhs;
-            set => _input.CurveBtmLhs = value;
+            get => _logic.CurveBtmLhs;
+            set => _logic.CurveBtmLhs = value;
         }
 
         [Browsable(false)]
         public bool CurveBtmRhs
         {
-            get => _input.CurveBtmRhs;
-            set => _input.CurveBtmRhs = value;
+            get => _logic.CurveBtmRhs;
+            set => _logic.CurveBtmRhs = value;
         }
+
+        [Browsable(false)]
+        public Color BackgroundColor => _logic.BackgroundColor;
 
         // =============
         // ===== Fields 
         // =============
 
-        private readonly InputLogic _input;
+        private readonly InputLogic _logic;
 
-        private bool _initialized;
+        private readonly bool _initialized;
 
         // ===================
         // ===== Constructors
@@ -125,15 +119,15 @@ namespace Axiom.Controls.Input
         {
             InitializeComponent();
 
-            _input = new InputLogic(() => Invalidate())
+            _logic = new InputLogic(() => Invalidate())
             {
                 Color = AxColor.Default,
                 Shape = AxShape.Normal
             };
 
-            _input.PropertyChanged += (s, e) => Invalidate();
+            _logic.PropertyChanged += (s, e) => Invalidate();
 
-            _input.SetTextboxTextToPlaceholder = () => Tb.Text = _input.Placeholder;
+            _logic.SetTextboxTextToPlaceholder = () => Tb.Text = _logic.Placeholder;
 
             Tb.TextChanged += Tb_TextChanged;
 
@@ -162,7 +156,7 @@ namespace Axiom.Controls.Input
 
         protected override void OnClick(EventArgs e)
         {
-            if (_input.State != AxState.Loading)
+            if (_logic.State != AxState.Loading)
             {
                 Tb.Focus();
                 base.OnClick(e);
@@ -173,24 +167,24 @@ namespace Axiom.Controls.Input
         {
             if (_initialized)
             {
-                _input.Width = Width;
+                _logic.Width = Width;
             }
             base.OnSizeChanged(e);
         }
 
         protected override void OnMouseEnter(EventArgs e)
         {
-            if (ContainsCursor() && !(_input.State == AxState.Loading || _input.State == AxState.Active))
+            if (ContainsCursor() && !(_logic.State == AxState.Loading || _logic.State == AxState.Active))
             {
-                _input.State = AxState.Hover;
+                _logic.State = AxState.Hover;
             }
         }
 
         protected override void OnMouseLeave(EventArgs e)
         {
-            if (!ContainsCursor() && !(_input.State == AxState.Loading || _input.State == AxState.Active))
+            if (!ContainsCursor() && !(_logic.State == AxState.Loading || _logic.State == AxState.Active))
             {
-                _input.State = AxState.Normal;
+                _logic.State = AxState.Normal;
             }
         }
 
@@ -201,17 +195,17 @@ namespace Axiom.Controls.Input
 
         private void Tb_GotFocus(object sender, EventArgs e)
         {
-            if (_input.State != AxState.Loading)
+            if (_logic.State != AxState.Loading)
             {
-                _input.State = AxState.Active;
+                _logic.State = AxState.Active;
             }
         }
 
         private void Tb_LostFocus(object sender, EventArgs e)
         {
-            if (_input.State != AxState.Loading)
+            if (_logic.State != AxState.Loading)
             {
-                _input.State = AxState.Normal;
+                _logic.State = AxState.Normal;
             }
         }
 
@@ -219,13 +213,13 @@ namespace Axiom.Controls.Input
         {
             if (string.IsNullOrWhiteSpace(Tb.Text))
             {
-                Tb.Text = _input.Placeholder;
+                Tb.Text = _logic.Placeholder;
             }
         }
 
         private void Tb_Enter(object sender, EventArgs e)
         {
-            if (Tb.Text == _input.Placeholder)
+            if (Tb.Text == _logic.Placeholder)
             {
                 Tb.Text = "";
             }
@@ -235,16 +229,21 @@ namespace Axiom.Controls.Input
         {
             base.OnEnabledChanged(e);
 
-            _input.State = Enabled ? AxState.Normal : AxState.Disabled;
+            _logic.State = Enabled ? AxState.Normal : AxState.Disabled;
         }
 
         protected override void OnPaint(PaintEventArgs e)
         {
-            _input.DesignMode = DesignMode;
+            if (Parent is IAxControl control)
+            {
+                BackColor = control.BackgroundColor;
+            }
 
-            _input.Draw(e.Graphics);
+            _logic.DesignMode = DesignMode;
 
-            Size = new Size(Width, _input.Height);
+            _logic.Draw(e.Graphics);
+
+            Size = new Size(Width, _logic.Height);
 
             SetTextboxProperties();
 
@@ -254,22 +253,22 @@ namespace Axiom.Controls.Input
 
         private void SetTextboxProperties()
         {
-            Tb.Enabled = !(_input.State == AxState.Disabled || _input.State == AxState.Loading);
+            Tb.Enabled = !(_logic.State == AxState.Disabled || _logic.State == AxState.Loading);
 
-            var backgroundColor = _input.BackgroundColor;
-            var foregroundColor = _input.ForegroundColor;
+            var backgroundColor = _logic.BackgroundColor;
+            var foregroundColor = _logic.ForegroundColor;
 
             // If the textbox is disabled the colors will have alpha values 
             // set to 50% (128). The textbox doesn't handle transparency so
             // we need to convert from ARGB to RGB based on a % (0.97255%).
             bool isTransparent = backgroundColor.A != 255 || foregroundColor.A != 255;
 
-            if (_input.State == AxState.Disabled && isTransparent)
+            if (_logic.State == AxState.Disabled && isTransparent)
             {
                 backgroundColor = GetDisabledColorAsRgbInsteadOfArgb(backgroundColor);
                 foregroundColor = GetDisabledColorAsRgbInsteadOfArgb(foregroundColor);
             }
-            else if (Tb.Text == _input.Placeholder)
+            else if (Tb.Text == _logic.Placeholder)
             {
                 foregroundColor = GetPlaceholderTextForegroundColor(foregroundColor);
             }
@@ -278,11 +277,11 @@ namespace Axiom.Controls.Input
 
             Tb.BackColor = backgroundColor;
 
-            Tb.Location = _input.TextLocation;
+            Tb.Location = _logic.TextLocation;
             
-            Tb.Size = _input.TextSize;
+            Tb.Size = _logic.TextSize;
 
-            Tb.Font = _input.Font;
+            Tb.Font = _logic.Font;
         }
 
         private Color GetDisabledColorAsRgbInsteadOfArgb(Color c)

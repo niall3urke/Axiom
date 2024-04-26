@@ -1,9 +1,6 @@
-﻿using Axiom.Controls.Box;
-using Axiom.Core;
+﻿using Axiom.Core;
 using System;
-using System.Linq;
 using System.Windows.Forms;
-using static System.Windows.Forms.AxHost;
 
 namespace Axiom
 {
@@ -124,14 +121,6 @@ namespace Axiom
             }
         }
 
-        private void PnlControls_Paint(object sender, PaintEventArgs e)
-        {
 
-        }
-
-        private void label10_Click(object sender, EventArgs e)
-        {
-
-        }
     }
 }

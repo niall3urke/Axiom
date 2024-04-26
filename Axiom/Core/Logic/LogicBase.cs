@@ -5,7 +5,7 @@ using System.Drawing;
 
 namespace Axiom.Core.Logic
 {
-    public class LogicBase : INotifyPropertyChanged
+    public class LogicBase : INotifyPropertyChanged 
     {
 
         // ==============
@@ -48,6 +48,12 @@ namespace Axiom.Core.Logic
             set => SetField(ref _hasFocus, value);
         }
 
+        public Point Location
+        {
+            get => _location;
+            set => SetField(ref _location, value);
+        }
+
         public Color BackgroundColor { get; set; }
 
         public Color ForegroundColor { get; set; }
@@ -58,8 +64,6 @@ namespace Axiom.Core.Logic
 
         public bool DesignMode { get; set; }
 
-        public Point Location { get; set; }
-
         public int Height { get; set; }
 
         public int Width { get; set; }
@@ -69,6 +73,8 @@ namespace Axiom.Core.Logic
         // =============
         // ===== Fields
         // =============
+
+        private Point _location;
 
         private bool _hasFocus;
 
