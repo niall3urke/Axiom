@@ -117,7 +117,7 @@ You can create a lighter-weight button with **IsOutlined**:
 ![axiom button outlined](https://github.com/niall3urke/Axiom/assets/11950726/7ba656d7-cec7-4c00-82a7-206de7b1c7e1)
 
 #### Inverted
-Or inverted the foreground and background colors with  **IsInverted**:
+Or invert the foreground and background colors with  **IsInverted**:
 
 ![axiom button inverted](https://github.com/niall3urke/Axiom/assets/11950726/5917062d-f228-4941-b32e-9324643e2cee)
 
