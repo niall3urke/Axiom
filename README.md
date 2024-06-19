@@ -93,7 +93,7 @@ Opt for bright eye-catching colors:
 
 ![axiom button colors-normal](https://github.com/niall3urke/Axiom/assets/11950726/39b9fa21-5005-4419-8e25-45ee32af65ba)
 
-Or, toggle the **IsLight** property for the light version:
+Or, toggle the **Light** property for the light version:
 
 ![axiom buttoncolors-light](https://github.com/niall3urke/Axiom/assets/11950726/4361d986-2970-4734-b6ed-ff762e87600e)
 
@@ -112,17 +112,17 @@ Sizes are set using the **Shape** property.
 ### Styles
 
 #### Outlined
-You can create a lighter-weight button with **IsOutlined**:
+You can create a lighter-weight button with **Outlined**:
 
 ![axiom button outlined](https://github.com/niall3urke/Axiom/assets/11950726/7ba656d7-cec7-4c00-82a7-206de7b1c7e1)
 
 #### Inverted
-Or invert the foreground and background colors with  **IsInverted**:
+Or invert the foreground and background colors with  **Inverted**:
 
 ![axiom button inverted](https://github.com/niall3urke/Axiom/assets/11950726/5917062d-f228-4941-b32e-9324643e2cee)
 
 #### Rounded
-You can even create pill-style buttons with **IsRounded**:
+You can even create pill-style buttons with **Rounded**:
 
 ![axoim button rounded](https://github.com/niall3urke/Axiom/assets/11950726/88e19922-a67e-486e-ace1-1e294cb73bc9)
 
